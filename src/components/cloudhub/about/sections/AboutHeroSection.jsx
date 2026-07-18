@@ -3,8 +3,16 @@ import { COLORS } from "../../theme";
 import { aboutStyles } from "../aboutStyles";
 import { AvatarPlaceholder, InfoRow } from "../ui/AboutPrimitives";
 
+const AVATAR_STORAGE_KEY = "cloudhub.about.avatar";
+
 export default function AboutHeroSection() {
-  const [avatarPreview, setAvatarPreview] = React.useState(null);
+  const [avatarPreview, setAvatarPreview] = React.useState(() => {
+    if (typeof window === "undefined") {
+      return null;
+    }
+
+    return window.localStorage.getItem(AVATAR_STORAGE_KEY);
+  });
   const fileInputRef = React.useRef(null);
 
   const handlePickPhoto = () => {
@@ -19,13 +27,18 @@ export default function AboutHeroSection() {
       return;
     }
 
-    const objectUrl = URL.createObjectURL(file);
-    setAvatarPreview((prev) => {
-      if (prev && prev.startsWith("blob:")) {
-        URL.revokeObjectURL(prev);
+    const reader = new FileReader();
+    reader.onload = () => {
+      const dataUrl = typeof reader.result === "string" ? reader.result : null;
+      if (!dataUrl) {
+        return;
       }
-      return objectUrl;
-    });
+
+      setAvatarPreview(dataUrl);
+      window.localStorage.setItem(AVATAR_STORAGE_KEY, dataUrl);
+    };
+
+    reader.readAsDataURL(file);
   };
 
   return (
@@ -86,7 +99,7 @@ export default function AboutHeroSection() {
       </div>
 
       <div style={aboutStyles.avatarWrap}>
-        <AvatarPlaceholder imageSrc={avatarPreview || "/avatar.jpg"} />
+        <AvatarPlaceholder imageSrc={avatarPreview || "/avatar.jpg"} onClick={handlePickPhoto} />
       </div>
     </section>
   );
