@@ -10,7 +10,7 @@ import { cloudHubHomeStyles } from "./cloudhub/pageStyles";
 
 export default function CloudHubHome({ onNavigate }) {
   const [typed, setTyped] = useState("");
-  const full = "Cloud Engineer";
+  const full = "IAM a Cloud Engineer";
 
   useEffect(() => {
     let i = 0;
