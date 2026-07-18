@@ -2,8 +2,22 @@ import React from "react";
 import { COLORS } from "../theme";
 import { navBarStyles, navLinkColor } from "./navBarStyles";
 
-export default function NavBar() {
+export default function NavBar({ activeLink = "Home", onNavigate }) {
   const links = ["Home", "About", "Projects", "Blog", "Resources", "Resume", "Contact"];
+
+  const handleLinkClick = (label) => {
+    if (!onNavigate) {
+      return;
+    }
+
+    if (label === "Home") {
+      onNavigate("home");
+    }
+
+    if (label === "About") {
+      onNavigate("about");
+    }
+  };
 
   return (
     <nav style={navBarStyles.nav}>
@@ -17,13 +31,15 @@ export default function NavBar() {
       </div>
 
       <div style={navBarStyles.linksWrap}>
-        {links.map((label, index) => (
+        {links.map((label) => (
           <button
             key={label}
             type="button"
+            onClick={() => handleLinkClick(label)}
             style={{
               ...navBarStyles.linkButton,
-              color: navLinkColor(index === 0),
+              color: navLinkColor(activeLink === label),
+              borderBottom: activeLink === label ? `2px solid ${COLORS.blue}` : "2px solid transparent",
             }}
           >
             {label}

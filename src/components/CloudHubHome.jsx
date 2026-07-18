@@ -8,7 +8,7 @@ import FooterSection from "./cloudhub/sections/FooterSection";
 import { FONT_FACE } from "./cloudhub/theme";
 import { cloudHubHomeStyles } from "./cloudhub/pageStyles";
 
-export default function CloudHubHome() {
+export default function CloudHubHome({ onNavigate }) {
   const [typed, setTyped] = useState("");
   const full = "Cloud Engineer";
 
@@ -25,7 +25,7 @@ export default function CloudHubHome() {
   return (
     <div style={cloudHubHomeStyles.page}>
       <style>{FONT_FACE}</style>
-      <NavBar />
+      <NavBar activeLink="Home" onNavigate={onNavigate} />
       <HeroSection typed={typed} full={full} />
       <HighlightsSection />
       <ProjectsSection />

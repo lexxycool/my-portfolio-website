@@ -29,6 +29,7 @@ export const navBarStyles = {
     background: "transparent",
     border: "none",
     padding: 0,
+    paddingBottom: 4,
     cursor: "pointer",
   },
   signInButton: {
