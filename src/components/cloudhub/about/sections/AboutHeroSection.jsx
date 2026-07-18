@@ -84,6 +84,25 @@ export default function AboutHeroSection() {
             label="Email"
             value="maxirexy16@gmail.com"
           />
+          <InfoRow
+            icon={(
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
+                <rect x="4" y="4" width="16" height="16" rx="2" stroke={COLORS.blue} strokeWidth="1.7" />
+                <path d="M8 10v6M8 8h.01M12 16v-3a2 2 0 0 1 4 0v3" stroke={COLORS.blue} strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            )}
+            label="LinkedIn"
+            value={(
+              <a
+                href="https://www.linkedin.com/in/obinna-alex-mokwe/"
+                target="_blank"
+                rel="noreferrer"
+                style={aboutStyles.infoLink}
+              >
+                linkedin.com/in/obinna-alex-mokwe
+              </a>
+            )}
+          />
         </div>
 
         <div style={aboutStyles.uploadRow}>

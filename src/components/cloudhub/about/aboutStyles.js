@@ -96,6 +96,15 @@ export const aboutStyles = {
     fontSize: 14,
     color: COLORS.text,
     fontWeight: 500,
+    whiteSpace: "nowrap",
+  },
+  infoLink: {
+    fontFamily: "'Inter', sans-serif",
+    fontSize: 14,
+    color: COLORS.blue,
+    fontWeight: 500,
+    textDecoration: "none",
+    whiteSpace: "nowrap",
   },
   skillsSection: {
     padding: "8px 48px 64px",
