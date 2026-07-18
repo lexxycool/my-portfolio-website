@@ -79,7 +79,7 @@ export default function AboutHeroSection() {
               </svg>
             )}
             label="Email"
-            value="obinna@example.com"
+            value="maxirexy16@gmail.com"
           />
         </div>
 
