@@ -18,9 +18,6 @@ export default function HeroSection({ typed, full }) {
           <button type="button" style={heroSectionStyles.primaryAction}>
             View projects
           </button>
-          <button type="button" style={heroSectionStyles.secondaryAction}>
-            Download resume
-          </button>
         </div>
       </div>
       <HeroGraphic />
