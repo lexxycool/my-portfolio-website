@@ -3,7 +3,7 @@ import { COLORS } from "../theme";
 import { navBarStyles, navLinkColor } from "./navBarStyles";
 
 export default function NavBar({ activeLink = "Home", onNavigate }) {
-  const links = ["Home", "About", "Projects", "Blog", "Labs", "Resume", "Contact"];
+  const links = ["Home", "About", "Projects", "Labs", "Blog", "Resume", "Contact"];
 
   const handleLinkClick = (label) => {
     if (!onNavigate) {
