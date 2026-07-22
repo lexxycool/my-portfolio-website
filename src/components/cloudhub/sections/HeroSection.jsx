@@ -2,7 +2,7 @@ import React from "react";
 import HeroGraphic from "../graphics/HeroGraphic";
 import { heroCursorStyle, heroSectionStyles } from "./sectionStyles";
 
-export default function HeroSection({ typed, full }) {
+export default function HeroSection({ typed, full, onNavigate }) {
   return (
     <section style={heroSectionStyles.section}>
       <div style={heroSectionStyles.contentWrap}>
@@ -15,7 +15,11 @@ export default function HeroSection({ typed, full }) {
           Building secure, scalable and reliable cloud solutions on Microsoft Azure.
         </p>
         <div style={heroSectionStyles.actionRow}>
-          <button type="button" style={heroSectionStyles.primaryAction}>
+          <button
+            type="button"
+            style={heroSectionStyles.primaryAction}
+            onClick={() => onNavigate && onNavigate("projects")}
+          >
             View projects
           </button>
         </div>

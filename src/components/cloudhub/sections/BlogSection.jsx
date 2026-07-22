@@ -2,10 +2,14 @@ import React from "react";
 import { BlogCard, SectionHeader } from "../ui/Cards";
 import { blogSectionStyles } from "./sectionStyles";
 
-export default function BlogSection() {
+export default function BlogSection({ onNavigate, showCta = true }) {
   return (
     <section style={blogSectionStyles.section}>
-      <SectionHeader title="Latest from the blog" cta="View all posts" />
+      <SectionHeader
+        title="Latest from the blog"
+        cta={showCta ? "View all posts" : null}
+        onCtaClick={() => onNavigate && onNavigate("blog")}
+      />
       <div style={blogSectionStyles.grid}>
         <BlogCard
           seed={1}

@@ -62,7 +62,7 @@ function ProjectThumb({ variant }) {
   );
 }
 
-export function ProjectCard({ variant, title, desc, tags }) {
+export function ProjectCard({ variant, title, desc, tags, onViewProject }) {
   return (
     <div style={cardStyles.projectCard}>
       <ProjectThumb variant={variant} />
@@ -78,7 +78,11 @@ export function ProjectCard({ variant, title, desc, tags }) {
             <Tag key={tag}>{tag}</Tag>
           ))}
         </div>
-        <button type="button" style={cardStyles.inlineLinkButton}>
+        <button
+          type="button"
+          style={cardStyles.inlineLinkButton}
+          onClick={onViewProject}
+        >
           View project &rarr;
         </button>
       </div>
@@ -123,14 +127,14 @@ export function BlogCard({ seed, title, excerpt, meta }) {
   );
 }
 
-export function SectionHeader({ title, cta }) {
+export function SectionHeader({ title, cta, onCtaClick }) {
   return (
     <div style={cardStyles.sectionHeader}>
       <h2 style={cardStyles.sectionTitle}>
         {title}
       </h2>
       {cta ? (
-        <button type="button" style={cardStyles.inlineLinkButton}>
+        <button type="button" style={cardStyles.inlineLinkButton} onClick={onCtaClick}>
           {cta} &rarr;
         </button>
       ) : null}
