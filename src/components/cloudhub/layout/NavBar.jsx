@@ -17,6 +17,18 @@ export default function NavBar({ activeLink = "Home", onNavigate }) {
     if (label === "About") {
       onNavigate("about");
     }
+
+    if (label === "Projects") {
+      onNavigate("projects");
+    }
+
+    if (label === "Blog") {
+      onNavigate("blog");
+    }
+
+    if (label === "Labs") {
+      onNavigate("labs");
+    }
   };
 
   return (

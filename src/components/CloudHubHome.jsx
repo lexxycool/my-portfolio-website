@@ -26,10 +26,10 @@ export default function CloudHubHome({ onNavigate }) {
     <div style={cloudHubHomeStyles.page}>
       <style>{FONT_FACE}</style>
       <NavBar activeLink="Home" onNavigate={onNavigate} />
-      <HeroSection typed={typed} full={full} />
+      <HeroSection typed={typed} full={full} onNavigate={onNavigate} />
       <HighlightsSection />
-      <ProjectsSection />
-      <BlogSection />
+      <ProjectsSection onNavigate={onNavigate} />
+      <BlogSection onNavigate={onNavigate} />
       <FooterSection />
     </div>
   );
