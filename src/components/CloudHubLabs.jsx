@@ -4,22 +4,7 @@ import FooterSection from "./cloudhub/sections/FooterSection";
 import { COLORS, FONT_FACE } from "./cloudhub/theme";
 import { cloudHubHomeStyles } from "./cloudhub/pageStyles";
 
-const labItems = [
-  {
-    title: "Azure automation experiments",
-    desc: "Small prototypes for scripting repeatable Azure tasks and deployments.",
-  },
-  {
-    title: "Security tooling playground",
-    desc: "Hands-on testing for network inspection, access control, and monitoring ideas.",
-  },
-  {
-    title: "AI workflow prototypes",
-    desc: "Quick builds for assistant-style automations and productivity workflows.",
-  },
-];
-
-export default function CloudHubLabs({ onNavigate }) {
+export default function CloudHubLabs({ onNavigate, siteContent }) {
   return (
     <div style={cloudHubHomeStyles.page}>
       <style>{FONT_FACE}</style>
@@ -57,7 +42,7 @@ export default function CloudHubLabs({ onNavigate }) {
             gap: 18,
           }}
         >
-          {labItems.map((item) => (
+          {siteContent.labs.map((item) => (
             <div
               key={item.title}
               style={{

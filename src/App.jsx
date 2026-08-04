@@ -4,6 +4,9 @@ import CloudHubAbout from './components/CloudHubAbout';
 import CloudHubProjects from './components/CloudHubProjects';
 import CloudHubBlog from './components/CloudHubBlog';
 import CloudHubLabs from './components/CloudHubLabs';
+import CloudHubResume from './components/CloudHubResume';
+import CloudHubAdmin from './components/CloudHubAdmin';
+import { loadSiteContent, saveSiteContent } from './components/cloudhub/content/siteContentStore';
 
 function getCurrentPage() {
   if (window.location.pathname === '/about') {
@@ -22,11 +25,20 @@ function getCurrentPage() {
     return 'labs';
   }
 
+  if (window.location.pathname === '/resume') {
+    return 'resume';
+  }
+
+  if (window.location.pathname === '/admin') {
+    return 'admin';
+  }
+
   return 'home';
 }
 
 function App() {
   const [page, setPage] = useState(getCurrentPage());
+  const [siteContent, setSiteContent] = useState(loadSiteContent);
 
   useEffect(() => {
     const onPopState = () => setPage(getCurrentPage());
@@ -44,6 +56,10 @@ function App() {
             ? '/blog'
             : targetPage === 'labs'
               ? '/labs'
+            : targetPage === 'resume'
+              ? '/resume'
+            : targetPage === 'admin'
+              ? '/admin'
             : '/';
     if (window.location.pathname !== nextPath) {
       window.history.pushState({}, '', nextPath);
@@ -51,17 +67,26 @@ function App() {
     setPage(targetPage);
   };
 
+  const handleSaveContent = (nextContent) => {
+    saveSiteContent(nextContent);
+    setSiteContent(nextContent);
+  };
+
   return (
     page === 'about' ? (
       <CloudHubAbout onNavigate={handleNavigate} />
     ) : page === 'projects' ? (
-      <CloudHubProjects onNavigate={handleNavigate} />
+      <CloudHubProjects onNavigate={handleNavigate} siteContent={siteContent} />
     ) : page === 'blog' ? (
-      <CloudHubBlog onNavigate={handleNavigate} />
+      <CloudHubBlog onNavigate={handleNavigate} siteContent={siteContent} />
     ) : page === 'labs' ? (
-      <CloudHubLabs onNavigate={handleNavigate} />
+      <CloudHubLabs onNavigate={handleNavigate} siteContent={siteContent} />
+    ) : page === 'resume' ? (
+      <CloudHubResume onNavigate={handleNavigate} siteContent={siteContent} />
+    ) : page === 'admin' ? (
+      <CloudHubAdmin onNavigate={handleNavigate} siteContent={siteContent} onSaveContent={handleSaveContent} />
     ) : (
-      <CloudHubHome onNavigate={handleNavigate} />
+      <CloudHubHome onNavigate={handleNavigate} siteContent={siteContent} />
     )
   );
 }

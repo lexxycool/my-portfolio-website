@@ -8,7 +8,7 @@ import FooterSection from "./cloudhub/sections/FooterSection";
 import { FONT_FACE } from "./cloudhub/theme";
 import { cloudHubHomeStyles } from "./cloudhub/pageStyles";
 
-export default function CloudHubHome({ onNavigate }) {
+export default function CloudHubHome({ onNavigate, siteContent }) {
   const [typed, setTyped] = useState("");
   const full = "IAM a Cloud Software Engineer";
 
@@ -28,8 +28,8 @@ export default function CloudHubHome({ onNavigate }) {
       <NavBar activeLink="Home" onNavigate={onNavigate} />
       <HeroSection typed={typed} full={full} onNavigate={onNavigate} />
       <HighlightsSection />
-      <ProjectsSection onNavigate={onNavigate} />
-      <BlogSection onNavigate={onNavigate} />
+      <ProjectsSection onNavigate={onNavigate} projects={siteContent.projects} />
+      <BlogSection onNavigate={onNavigate} posts={siteContent.blogPosts} />
       <FooterSection />
     </div>
   );

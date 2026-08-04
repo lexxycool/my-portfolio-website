@@ -5,7 +5,7 @@ import ProjectsSection from "./cloudhub/sections/ProjectsSection";
 import { COLORS, FONT_FACE } from "./cloudhub/theme";
 import { cloudHubHomeStyles } from "./cloudhub/pageStyles";
 
-export default function CloudHubProjects({ onNavigate }) {
+export default function CloudHubProjects({ onNavigate, siteContent }) {
   return (
     <div style={cloudHubHomeStyles.page}>
       <style>{FONT_FACE}</style>
@@ -18,7 +18,7 @@ export default function CloudHubProjects({ onNavigate }) {
           A selection of cloud, automation, and AI work I've built recently.
         </p>
       </main>
-      <ProjectsSection showCta={false} />
+      <ProjectsSection showCta={false} projects={siteContent.projects} />
       <FooterSection />
     </div>
   );

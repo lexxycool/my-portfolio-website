@@ -5,7 +5,7 @@ import BlogSection from "./cloudhub/sections/BlogSection";
 import { COLORS, FONT_FACE } from "./cloudhub/theme";
 import { cloudHubHomeStyles } from "./cloudhub/pageStyles";
 
-export default function CloudHubBlog({ onNavigate }) {
+export default function CloudHubBlog({ onNavigate, siteContent }) {
   return (
     <div style={cloudHubHomeStyles.page}>
       <style>{FONT_FACE}</style>
@@ -34,7 +34,7 @@ export default function CloudHubBlog({ onNavigate }) {
           Notes, tutorials, and cloud engineering write-ups from recent work.
         </p>
       </main>
-      <BlogSection showCta={false} />
+      <BlogSection showCta={false} posts={siteContent.blogPosts} />
       <FooterSection />
     </div>
   );
