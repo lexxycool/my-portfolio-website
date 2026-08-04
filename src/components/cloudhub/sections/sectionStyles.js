@@ -10,7 +10,7 @@ export const heroSectionStyles = {
     flexWrap: "wrap",
   },
   contentWrap: {
-    maxWidth: 520,
+    maxWidth: 760,
   },
   introText: {
     fontFamily: "'Inter', sans-serif",
