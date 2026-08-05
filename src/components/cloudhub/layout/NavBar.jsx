@@ -37,6 +37,10 @@ export default function NavBar({ activeLink = "Home", onNavigate }) {
     if (label === "Admin") {
       onNavigate("admin");
     }
+
+    if (label === "Contact") {
+      onNavigate("contact");
+    }
   };
 
   return (

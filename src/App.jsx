@@ -6,6 +6,7 @@ import CloudHubBlog from './components/CloudHubBlog';
 import CloudHubLabs from './components/CloudHubLabs';
 import CloudHubResume from './components/CloudHubResume';
 import CloudHubAdmin from './components/CloudHubAdmin';
+import CloudHubContact from './components/CloudHubContact';
 import { loadSiteContent, saveSiteContent } from './components/cloudhub/content/siteContentStore';
 
 function getCurrentPage() {
@@ -31,6 +32,10 @@ function getCurrentPage() {
 
   if (window.location.pathname === '/admin') {
     return 'admin';
+  }
+
+  if (window.location.pathname === '/contact') {
+    return 'contact';
   }
 
   return 'home';
@@ -60,6 +65,8 @@ function App() {
               ? '/resume'
             : targetPage === 'admin'
               ? '/admin'
+            : targetPage === 'contact'
+              ? '/contact'
             : '/';
     if (window.location.pathname !== nextPath) {
       window.history.pushState({}, '', nextPath);
@@ -85,6 +92,8 @@ function App() {
       <CloudHubResume onNavigate={handleNavigate} siteContent={siteContent} />
     ) : page === 'admin' ? (
       <CloudHubAdmin onNavigate={handleNavigate} siteContent={siteContent} onSaveContent={handleSaveContent} />
+    ) : page === 'contact' ? (
+      <CloudHubContact onNavigate={handleNavigate} />
     ) : (
       <CloudHubHome onNavigate={handleNavigate} siteContent={siteContent} />
     )
