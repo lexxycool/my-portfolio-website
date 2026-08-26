@@ -71,7 +71,7 @@ export default function NavBar({ activeLink = "Home", onNavigate }) {
         ))}
       </div>
 
-      <button type="button" style={navBarStyles.signInButton}>
+      <button type="button" style={navBarStyles.signInButton} onClick={() => onNavigate?.("signin")}>
         Sign in
       </button>
     </nav>
