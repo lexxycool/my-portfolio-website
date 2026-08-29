@@ -106,17 +106,16 @@ const styles = {
 };
 
 export default function CloudHubSignIn({ onNavigate }) {
-  const { instance, accounts, inProgress } = useMsal();
+  const { instance, inProgress } = useMsal();
   const isAuthenticated = useIsAuthenticated();
 
   const [error, setError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const activeAccount = accounts[0];
-
   React.useEffect(() => {
-    if (isAuthenticated && onNavigate) {
-      onNavigate("admin");
+    if (isAuthenticated) {
+      window.history.pushState({}, '', '/admin');
+      onNavigate?.("admin");
     }
   }, [isAuthenticated, onNavigate]);
 
@@ -128,9 +127,8 @@ export default function CloudHubSignIn({ onNavigate }) {
       if (response?.account) {
         instance.setActiveAccount(response.account);
       }
-      if (onNavigate) {
-        onNavigate("admin");
-      }
+      window.history.pushState({}, '', '/admin');
+      onNavigate?.("admin");
     } catch (err) {
       console.error("MSAL sign-in error:", err);
       if (err?.errorCode !== "user_cancelled") {
@@ -141,75 +139,45 @@ export default function CloudHubSignIn({ onNavigate }) {
     }
   };
 
-  const handleSignOut = async () => {
-    setError("");
-    try {
-      await instance.logoutPopup();
-    } catch (err) {
-      console.error("MSAL sign-out error:", err);
-    }
-  };
-
   return (
     <div style={styles.page}>
       <style>{FONT_FACE}</style>
       <header style={styles.header}>
-        <button type="button" style={{ ...styles.brand, background: "transparent", border: "none", cursor: "pointer", padding: 0 }} onClick={() => onNavigate("home")}>
+        <button type="button" style={{ ...styles.brand, background: "transparent", border: "none", cursor: "pointer", padding: 0 }} onClick={() => onNavigate?.("home")}>
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">
             <path d="M7 18a4.5 4.5 0 0 1-.4-8.98A5.5 5.5 0 0 1 17.2 8.1 4 4 0 0 1 17 16H7z" stroke={COLORS.blue} strokeWidth="1.6" />
           </svg>
           CloudHub
         </button>
-        <button type="button" style={styles.backButton} onClick={() => onNavigate("home")}>Back to portfolio</button>
+        <button type="button" style={styles.backButton} onClick={() => onNavigate?.("home")}>Back to portfolio</button>
       </header>
 
       <main style={styles.main}>
         <section style={styles.panel}>
           <p style={styles.eyebrow}>Secure workspace access</p>
-          <h1 style={styles.title}>{isAuthenticated ? "Account connected" : "Welcome back."}</h1>
+          <h1 style={styles.title}>Welcome back.</h1>
           <p style={styles.subtitle}>
-            {isAuthenticated
-              ? `Signed in as ${activeAccount?.name || activeAccount?.username || "Microsoft User"}.`
-              : "Sign in with your Microsoft account to access your CloudHub workspace."}
+            Sign in with your Microsoft account to access your CloudHub admin dashboard.
           </p>
 
-          {isAuthenticated ? (
-            <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-              <button
-                type="button"
-                style={styles.submit}
-                onClick={() => onNavigate("admin")}
-              >
-                Continue to Admin Dashboard
-              </button>
-              <button
-                type="button"
-                style={styles.msButton}
-                onClick={handleSignOut}
-              >
-                Sign out of Microsoft
-              </button>
-            </div>
-          ) : (
-            <div>
-              <button
-                type="button"
-                style={{ ...styles.msButton, opacity: isSubmitting || inProgress !== "none" ? 0.7 : 1 }}
-                onClick={handleMicrosoftSignIn}
-                disabled={isSubmitting || inProgress !== "none"}
-              >
-                <svg width="18" height="18" viewBox="0 0 21 21" aria-hidden="true">
-                  <rect x="1" y="1" width="9" height="9" fill="#f25022" />
-                  <rect x="11" y="1" width="9" height="9" fill="#7fba00" />
-                  <rect x="1" y="11" width="9" height="9" fill="#00a4ef" />
-                  <rect x="11" y="11" width="9" height="9" fill="#ffb900" />
-                </svg>
-                Sign in with Microsoft
-              </button>
+          <div>
+            <button
+              type="button"
+              style={{ ...styles.msButton, opacity: isSubmitting || inProgress !== "none" ? 0.7 : 1 }}
+              onClick={handleMicrosoftSignIn}
+              disabled={isSubmitting || inProgress !== "none"}
+            >
+              <svg width="18" height="18" viewBox="0 0 21 21" aria-hidden="true">
+                <rect x="1" y="1" width="9" height="9" fill="#f25022" />
+                <rect x="11" y="1" width="9" height="9" fill="#7fba00" />
+                <rect x="1" y="11" width="9" height="9" fill="#00a4ef" />
+                <rect x="11" y="11" width="9" height="9" fill="#ffb900" />
+              </svg>
+              Sign in with Microsoft
+            </button>
 
-              {error && <p style={{ ...styles.status, color: "#FF8D8D" }} role="alert">{error}</p>}
-            </div>
-          )}
+            {error && <p style={{ ...styles.status, color: "#FF8D8D" }} role="alert">{error}</p>}
+          </div>
         </section>
       </main>
     </div>

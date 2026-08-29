@@ -10,6 +10,15 @@ const msalInstance = new PublicClientApplication(msalConfig);
 
 await msalInstance.initialize();
 
+try {
+  const redirectResponse = await msalInstance.handleRedirectPromise();
+  if (redirectResponse?.account) {
+    msalInstance.setActiveAccount(redirectResponse.account);
+  }
+} catch (error) {
+  console.error("MSAL redirect processing error:", error);
+}
+
 if (!msalInstance.getActiveAccount() && msalInstance.getAllAccounts().length > 0) {
   msalInstance.setActiveAccount(msalInstance.getAllAccounts()[0]);
 }

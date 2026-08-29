@@ -9,7 +9,7 @@ export default function NavBar({ activeLink = "Home", onNavigate }) {
   const activeAccount = accounts[0];
   const displayName = activeAccount?.name || activeAccount?.username;
 
-  const links = ["Home", "About", "Projects", "Labs", "Blog", "Resume", "Admin", "Contact"];
+  const links = ["Home", "About", "Projects", "Labs", "Blog", "Resume", "Contact"];
 
   const handleLinkClick = (label) => {
     if (!onNavigate) {

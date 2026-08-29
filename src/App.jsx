@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
-import { useIsAuthenticated } from '@azure/msal-react';
+import { useMsal, useIsAuthenticated } from '@azure/msal-react';
+import { EventType } from '@azure/msal-browser';
 import CloudHubHome from './components/CloudHubHome';
 import CloudHubAbout from './components/CloudHubAbout';
 import CloudHubProjects from './components/CloudHubProjects';
@@ -12,6 +13,10 @@ import CloudHubSignIn from './components/CloudHubSignIn';
 import { loadSiteContent, saveSiteContent } from './components/cloudhub/content/siteContentStore';
 
 function getCurrentPage() {
+  if (typeof window !== 'undefined' && (window.location.hash.includes('code=') || window.location.hash.includes('state='))) {
+    return 'admin';
+  }
+
   if (window.location.pathname === '/about') {
     return 'about';
   }
@@ -50,13 +55,38 @@ function getCurrentPage() {
 function App() {
   const [page, setPage] = useState(getCurrentPage());
   const [siteContent, setSiteContent] = useState(loadSiteContent);
+  const { instance } = useMsal();
   const isMsalAuthenticated = useIsAuthenticated();
 
   useEffect(() => {
     const onPopState = () => setPage(getCurrentPage());
     window.addEventListener('popstate', onPopState);
+
+    if (window.location.hash.includes('code=') || window.location.hash.includes('state=')) {
+      window.history.replaceState({}, '', '/admin');
+      setPage('admin');
+    }
+
     return () => window.removeEventListener('popstate', onPopState);
   }, []);
+
+  useEffect(() => {
+    const callbackId = instance.addEventCallback((event) => {
+      if (event.eventType === EventType.LOGIN_SUCCESS) {
+        if (event.payload?.account) {
+          instance.setActiveAccount(event.payload.account);
+        }
+        window.history.pushState({}, '', '/admin');
+        setPage('admin');
+      }
+    });
+
+    return () => {
+      if (callbackId) {
+        instance.removeEventCallback(callbackId);
+      }
+    };
+  }, [instance]);
 
   useEffect(() => {
     if (page === 'signin' && isMsalAuthenticated) {
@@ -111,7 +141,11 @@ function App() {
     ) : page === 'contact' ? (
       <CloudHubContact onNavigate={handleNavigate} />
     ) : page === 'signin' ? (
-      <CloudHubSignIn onNavigate={handleNavigate} />
+      isMsalAuthenticated ? (
+        <CloudHubAdmin onNavigate={handleNavigate} siteContent={siteContent} onSaveContent={handleSaveContent} />
+      ) : (
+        <CloudHubSignIn onNavigate={handleNavigate} />
+      )
     ) : (
       <CloudHubHome onNavigate={handleNavigate} siteContent={siteContent} />
     )
