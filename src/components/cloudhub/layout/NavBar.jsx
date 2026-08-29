@@ -1,8 +1,14 @@
 import React from "react";
+import { useMsal, useIsAuthenticated } from "@azure/msal-react";
 import { COLORS } from "../theme";
 import { navBarStyles, navLinkColor } from "./navBarStyles";
 
 export default function NavBar({ activeLink = "Home", onNavigate }) {
+  const { instance, accounts } = useMsal();
+  const isAuthenticated = useIsAuthenticated();
+  const activeAccount = accounts[0];
+  const displayName = activeAccount?.name || activeAccount?.username;
+
   const links = ["Home", "About", "Projects", "Labs", "Blog", "Resume", "Admin", "Contact"];
 
   const handleLinkClick = (label) => {
@@ -43,6 +49,14 @@ export default function NavBar({ activeLink = "Home", onNavigate }) {
     }
   };
 
+  const handleSignOut = async () => {
+    try {
+      await instance.logoutPopup();
+    } catch (err) {
+      console.error("MSAL logout error:", err);
+    }
+  };
+
   return (
     <nav style={navBarStyles.nav}>
       <div style={navBarStyles.brandWrap}>
@@ -71,9 +85,22 @@ export default function NavBar({ activeLink = "Home", onNavigate }) {
         ))}
       </div>
 
-      <button type="button" style={navBarStyles.signInButton} onClick={() => onNavigate?.("signin")}>
-        Sign in
-      </button>
+      {isAuthenticated ? (
+        <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+          {displayName && (
+            <span style={{ fontFamily: "'Inter', sans-serif", fontSize: 13, color: COLORS.textMuted }}>
+              {displayName}
+            </span>
+          )}
+          <button type="button" style={navBarStyles.signInButton} onClick={handleSignOut}>
+            Sign out
+          </button>
+        </div>
+      ) : (
+        <button type="button" style={navBarStyles.signInButton} onClick={() => onNavigate?.("signin")}>
+          Sign in
+        </button>
+      )}
     </nav>
   );
 }

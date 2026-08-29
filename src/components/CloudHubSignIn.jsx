@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import { useMsal, useIsAuthenticated } from "@azure/msal-react";
+import { loginRequest } from "../authConfig";
 import { COLORS, FONT_FACE } from "./cloudhub/theme";
 
 const styles = {
@@ -66,63 +68,6 @@ const styles = {
     lineHeight: 1.6,
     margin: "0 0 30px",
   },
-  field: {
-    marginBottom: 18,
-  },
-  label: {
-    color: COLORS.textMuted,
-    display: "block",
-    fontSize: 12,
-    fontWeight: 500,
-    marginBottom: 8,
-  },
-  input: {
-    background: COLORS.surfaceAlt,
-    border: `1px solid ${COLORS.border}`,
-    borderRadius: 6,
-    boxSizing: "border-box",
-    color: COLORS.text,
-    fontFamily: "'Inter', sans-serif",
-    fontSize: 14,
-    outline: "none",
-    padding: "12px 13px",
-    width: "100%",
-  },
-  passwordRow: {
-    position: "relative",
-  },
-  toggle: {
-    background: "transparent",
-    border: "none",
-    color: COLORS.textMuted,
-    cursor: "pointer",
-    fontSize: 11,
-    position: "absolute",
-    right: 12,
-    top: 13,
-  },
-  options: {
-    alignItems: "center",
-    display: "flex",
-    justifyContent: "space-between",
-    margin: "4px 0 26px",
-  },
-  checkboxLabel: {
-    alignItems: "center",
-    color: COLORS.textMuted,
-    display: "flex",
-    fontSize: 12,
-    gap: 8,
-  },
-  link: {
-    background: "transparent",
-    border: "none",
-    color: COLORS.blue,
-    cursor: "pointer",
-    fontFamily: "'Inter', sans-serif",
-    fontSize: 12,
-    padding: 0,
-  },
   submit: {
     background: COLORS.blue,
     border: "none",
@@ -135,49 +80,64 @@ const styles = {
     padding: "13px 16px",
     width: "100%",
   },
+  msButton: {
+    background: "#202736",
+    border: `1px solid ${COLORS.borderStrong}`,
+    borderRadius: 6,
+    color: "#FFFFFF",
+    cursor: "pointer",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: 12,
+    fontFamily: "'Inter', sans-serif",
+    fontSize: 14,
+    fontWeight: 600,
+    padding: "13px 16px",
+    width: "100%",
+    transition: "background 0.2s, border-color 0.2s",
+  },
   status: {
     color: COLORS.cyan,
     fontSize: 12,
     margin: "16px 0 0",
     textAlign: "center",
   },
-  footer: {
-    color: COLORS.textFaint,
-    fontSize: 12,
-    margin: "24px 0 0",
-    textAlign: "center",
-  },
 };
 
 export default function CloudHubSignIn({ onNavigate }) {
-  const [showPassword, setShowPassword] = useState(false);
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [remember, setRemember] = useState(false);
+  const { instance, accounts, inProgress } = useMsal();
+  const isAuthenticated = useIsAuthenticated();
+
   const [error, setError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleSubmit = async (event) => {
-    event.preventDefault();
+  const activeAccount = accounts[0];
+
+  const handleMicrosoftSignIn = async () => {
     setError("");
     setIsSubmitting(true);
-
     try {
-      const response = await fetch("/api/auth/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        credentials: "include",
-        body: JSON.stringify({ email, password, remember }),
-      });
-      const result = await response.json();
-      if (!response.ok) {
-        throw new Error(result.error || "Unable to sign in.");
+      await instance.loginPopup(loginRequest);
+      if (onNavigate) {
+        onNavigate("admin");
       }
-      onNavigate("admin");
-    } catch (submitError) {
-      setError(submitError.message || "Unable to sign in.");
+    } catch (err) {
+      console.error("MSAL sign-in error:", err);
+      if (err?.errorCode !== "user_cancelled") {
+        setError(err?.message || "Microsoft sign-in failed.");
+      }
     } finally {
       setIsSubmitting(false);
+    }
+  };
+
+  const handleSignOut = async () => {
+    setError("");
+    try {
+      await instance.logoutPopup();
+    } catch (err) {
+      console.error("MSAL sign-out error:", err);
     }
   };
 
@@ -197,33 +157,51 @@ export default function CloudHubSignIn({ onNavigate }) {
       <main style={styles.main}>
         <section style={styles.panel}>
           <p style={styles.eyebrow}>Secure workspace access</p>
-          <h1 style={styles.title}>Welcome back.</h1>
-          <p style={styles.subtitle}>Sign in to continue to your CloudHub workspace and pick up where you left off.</p>
+          <h1 style={styles.title}>{isAuthenticated ? "Account connected" : "Welcome back."}</h1>
+          <p style={styles.subtitle}>
+            {isAuthenticated
+              ? `Signed in as ${activeAccount?.name || activeAccount?.username || "Microsoft User"}.`
+              : "Sign in with your Microsoft account to access your CloudHub workspace."}
+          </p>
 
-          <form onSubmit={handleSubmit}>
-            <div style={styles.field}>
-              <label htmlFor="email" style={styles.label}>Email address</label>
-              <input id="email" name="email" type="email" autoComplete="email" placeholder="you@example.com" required value={email} onChange={(event) => setEmail(event.target.value)} style={styles.input} />
+          {isAuthenticated ? (
+            <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+              <button
+                type="button"
+                style={styles.submit}
+                onClick={() => onNavigate("admin")}
+              >
+                Continue to Admin Dashboard
+              </button>
+              <button
+                type="button"
+                style={styles.msButton}
+                onClick={handleSignOut}
+              >
+                Sign out of Microsoft
+              </button>
             </div>
+          ) : (
+            <div>
+              <button
+                type="button"
+                style={{ ...styles.msButton, opacity: isSubmitting || inProgress !== "none" ? 0.7 : 1 }}
+                onClick={handleMicrosoftSignIn}
+                disabled={isSubmitting || inProgress !== "none"}
+              >
+                <svg width="18" height="18" viewBox="0 0 21 21" aria-hidden="true">
+                  <rect x="1" y="1" width="9" height="9" fill="#f25022" />
+                  <rect x="11" y="1" width="9" height="9" fill="#7fba00" />
+                  <rect x="1" y="11" width="9" height="9" fill="#00a4ef" />
+                  <rect x="11" y="11" width="9" height="9" fill="#ffb900" />
+                </svg>
+                Sign in with Microsoft
+              </button>
 
-            <div style={{ ...styles.field, marginBottom: 0 }}>
-              <label htmlFor="password" style={styles.label}>Password</label>
-              <div style={styles.passwordRow}>
-                <input id="password" name="password" type={showPassword ? "text" : "password"} autoComplete="current-password" placeholder="Enter your password" required value={password} onChange={(event) => setPassword(event.target.value)} style={{ ...styles.input, paddingRight: 62 }} />
-                <button type="button" style={styles.toggle} onClick={() => setShowPassword((current) => !current)}>{showPassword ? "Hide" : "Show"}</button>
-              </div>
+              {error && <p style={{ ...styles.status, color: "#FF8D8D" }} role="alert">{error}</p>}
             </div>
-
-            <div style={styles.options}>
-              <label style={styles.checkboxLabel}><input type="checkbox" name="remember" checked={remember} onChange={(event) => setRemember(event.target.checked)} /> Remember me</label>
-              <button type="button" style={styles.link}>Forgot password?</button>
-            </div>
-
-            <button type="submit" style={{ ...styles.submit, opacity: isSubmitting ? 0.7 : 1 }} disabled={isSubmitting}>{isSubmitting ? "Signing in..." : "Sign in to CloudHub"}</button>
-            {error && <p style={{ ...styles.status, color: "#FF8D8D" }} role="alert">{error}</p>}
-          </form>
+          )}
         </section>
-        <p style={styles.footer}>New to CloudHub? <button type="button" style={styles.link}>Create an account</button></p>
       </main>
     </div>
   );

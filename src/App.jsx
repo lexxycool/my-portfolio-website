@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useIsAuthenticated } from '@azure/msal-react';
 import CloudHubHome from './components/CloudHubHome';
 import CloudHubAbout from './components/CloudHubAbout';
 import CloudHubProjects from './components/CloudHubProjects';
@@ -49,7 +50,7 @@ function getCurrentPage() {
 function App() {
   const [page, setPage] = useState(getCurrentPage());
   const [siteContent, setSiteContent] = useState(loadSiteContent);
-  const [adminAuth, setAdminAuth] = useState(getCurrentPage() === 'admin' ? 'checking' : 'unknown');
+  const isMsalAuthenticated = useIsAuthenticated();
 
   useEffect(() => {
     const onPopState = () => setPage(getCurrentPage());
@@ -59,36 +60,14 @@ function App() {
 
   useEffect(() => {
     if (page !== 'admin') {
-      setAdminAuth('unknown');
       return;
     }
 
-    let cancelled = false;
-    setAdminAuth('checking');
-    fetch('/api/auth/me', { credentials: 'include' })
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error('Unauthenticated');
-        }
-        return response.json();
-      })
-      .then(() => {
-        if (!cancelled) {
-          setAdminAuth('authenticated');
-        }
-      })
-      .catch(() => {
-        if (!cancelled) {
-          window.history.replaceState({}, '', '/signin');
-          setAdminAuth('unauthenticated');
-          setPage('signin');
-        }
-      });
-
-    return () => {
-      cancelled = true;
-    };
-  }, [page]);
+    if (!isMsalAuthenticated) {
+      window.history.replaceState({}, '', '/signin');
+      setPage('signin');
+    }
+  }, [page, isMsalAuthenticated]);
 
   const handleNavigate = (targetPage) => {
     const nextPath =
@@ -121,9 +100,7 @@ function App() {
   };
 
   return (
-    page === 'admin' && adminAuth === 'checking' ? (
-      <div style={{ alignItems: 'center', background: '#0A0E17', color: '#8C97AC', display: 'flex', fontFamily: "'Inter', sans-serif", justifyContent: 'center', minHeight: '100vh' }}>Checking admin access...</div>
-    ) : page === 'about' ? (
+    page === 'about' ? (
       <CloudHubAbout onNavigate={handleNavigate} />
     ) : page === 'projects' ? (
       <CloudHubProjects onNavigate={handleNavigate} siteContent={siteContent} />
@@ -133,7 +110,7 @@ function App() {
       <CloudHubLabs onNavigate={handleNavigate} siteContent={siteContent} />
     ) : page === 'resume' ? (
       <CloudHubResume onNavigate={handleNavigate} siteContent={siteContent} />
-    ) : page === 'admin' && adminAuth === 'authenticated' ? (
+    ) : page === 'admin' && isMsalAuthenticated ? (
       <CloudHubAdmin onNavigate={handleNavigate} siteContent={siteContent} onSaveContent={handleSaveContent} />
     ) : page === 'contact' ? (
       <CloudHubContact onNavigate={handleNavigate} />
