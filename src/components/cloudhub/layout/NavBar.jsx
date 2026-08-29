@@ -57,6 +57,14 @@ export default function NavBar({ activeLink = "Home", onNavigate }) {
     }
   };
 
+  const handleSignInClick = async () => {
+    if (isAuthenticated) {
+      onNavigate?.("admin");
+    } else {
+      onNavigate?.("signin");
+    }
+  };
+
   return (
     <nav style={navBarStyles.nav}>
       <div style={navBarStyles.brandWrap}>

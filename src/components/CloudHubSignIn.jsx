@@ -114,11 +114,20 @@ export default function CloudHubSignIn({ onNavigate }) {
 
   const activeAccount = accounts[0];
 
+  React.useEffect(() => {
+    if (isAuthenticated && onNavigate) {
+      onNavigate("admin");
+    }
+  }, [isAuthenticated, onNavigate]);
+
   const handleMicrosoftSignIn = async () => {
     setError("");
     setIsSubmitting(true);
     try {
-      await instance.loginPopup(loginRequest);
+      const response = await instance.loginPopup(loginRequest);
+      if (response?.account) {
+        instance.setActiveAccount(response.account);
+      }
       if (onNavigate) {
         onNavigate("admin");
       }

@@ -142,7 +142,7 @@ export default function CloudHubAdmin({ onNavigate, siteContent, onSaveContent }
           Administrator
         </h1>
         <p style={{ margin: "0 0 20px", fontFamily: "'Inter', sans-serif", color: COLORS.textMuted }}>
-          Update your projects, labs, blog posts, and resume details from one place.
+          Update your projects, labs, and blog posts from one place.
         </p>
 
         <div style={{ display: "flex", gap: 10, marginBottom: 22 }}>
@@ -244,41 +244,6 @@ export default function CloudHubAdmin({ onNavigate, siteContent, onSaveContent }
               <RowActions onDelete={() => removeListItem("blogPosts", index)} />
             </div>
           ))}
-        </SectionCard>
-
-        <SectionCard title="Resume">
-          <div style={{ display: "grid", gridTemplateColumns: "160px 1fr", gap: 12, marginBottom: 10 }}>
-            <label style={{ fontFamily: "'Inter', sans-serif", color: COLORS.textMuted, fontSize: 13 }}>Title</label>
-            <input
-              value={draft.resume.title}
-              onChange={(event) => setDraft((prev) => ({ ...prev, resume: { ...prev.resume, title: event.target.value } }))}
-              style={fieldStyles.input}
-            />
-          </div>
-          <div style={{ display: "grid", gridTemplateColumns: "160px 1fr", gap: 12, marginBottom: 10 }}>
-            <label style={{ fontFamily: "'Inter', sans-serif", color: COLORS.textMuted, fontSize: 13 }}>Summary</label>
-            <textarea
-              value={draft.resume.summary}
-              onChange={(event) => setDraft((prev) => ({ ...prev, resume: { ...prev.resume, summary: event.target.value } }))}
-              style={fieldStyles.textarea}
-            />
-          </div>
-          <div style={{ display: "grid", gridTemplateColumns: "160px 1fr", gap: 12, marginBottom: 10 }}>
-            <label style={{ fontFamily: "'Inter', sans-serif", color: COLORS.textMuted, fontSize: 13 }}>Resume URL</label>
-            <input
-              value={draft.resume.url}
-              onChange={(event) => setDraft((prev) => ({ ...prev, resume: { ...prev.resume, url: event.target.value } }))}
-              style={fieldStyles.input}
-            />
-          </div>
-          <div style={{ display: "grid", gridTemplateColumns: "160px 1fr", gap: 12 }}>
-            <label style={{ fontFamily: "'Inter', sans-serif", color: COLORS.textMuted, fontSize: 13 }}>Updated text</label>
-            <input
-              value={draft.resume.updatedAt}
-              onChange={(event) => setDraft((prev) => ({ ...prev, resume: { ...prev.resume, updatedAt: event.target.value } }))}
-              style={fieldStyles.input}
-            />
-          </div>
         </SectionCard>
       </main>
 

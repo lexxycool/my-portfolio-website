@@ -59,13 +59,9 @@ function App() {
   }, []);
 
   useEffect(() => {
-    if (page !== 'admin') {
-      return;
-    }
-
-    if (!isMsalAuthenticated) {
-      window.history.replaceState({}, '', '/signin');
-      setPage('signin');
+    if (page === 'signin' && isMsalAuthenticated) {
+      window.history.replaceState({}, '', '/admin');
+      setPage('admin');
     }
   }, [page, isMsalAuthenticated]);
 
@@ -110,7 +106,7 @@ function App() {
       <CloudHubLabs onNavigate={handleNavigate} siteContent={siteContent} />
     ) : page === 'resume' ? (
       <CloudHubResume onNavigate={handleNavigate} siteContent={siteContent} />
-    ) : page === 'admin' && isMsalAuthenticated ? (
+    ) : page === 'admin' ? (
       <CloudHubAdmin onNavigate={handleNavigate} siteContent={siteContent} onSaveContent={handleSaveContent} />
     ) : page === 'contact' ? (
       <CloudHubContact onNavigate={handleNavigate} />
