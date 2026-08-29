@@ -123,18 +123,15 @@ export default function CloudHubSignIn({ onNavigate }) {
     setError("");
     setIsSubmitting(true);
     try {
-      const response = await instance.loginPopup(loginRequest);
-      if (response?.account) {
-        instance.setActiveAccount(response.account);
-      }
-      window.history.pushState({}, '', '/admin');
-      onNavigate?.("admin");
+      await instance.loginRedirect({
+        ...loginRequest,
+        redirectStartPage: `${window.location.origin}/admin`,
+      });
     } catch (err) {
       console.error("MSAL sign-in error:", err);
       if (err?.errorCode !== "user_cancelled") {
         setError(err?.message || "Microsoft sign-in failed.");
       }
-    } finally {
       setIsSubmitting(false);
     }
   };

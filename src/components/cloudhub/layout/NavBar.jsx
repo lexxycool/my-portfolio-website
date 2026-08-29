@@ -51,7 +51,9 @@ export default function NavBar({ activeLink = "Home", onNavigate }) {
 
   const handleSignOut = async () => {
     try {
-      await instance.logoutPopup();
+      await instance.logoutRedirect({
+        postLogoutRedirectUri: window.location.origin,
+      });
     } catch (err) {
       console.error("MSAL logout error:", err);
     }
