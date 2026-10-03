@@ -54,9 +54,9 @@ export const defaultSiteContent = {
   ],
   resume: {
     title: "Cloud Engineer Resume",
-    summary: "Download my latest resume for skills, certifications, and project highlights.",
+    summary: "View my latest resume for skills, certifications, and project highlights.",
     url: "#",
-    updatedAt: "Updated Aug 2026",
+    updatedAt: "Updated Oct 2026",
   },
 };
 
