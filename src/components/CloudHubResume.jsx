@@ -22,7 +22,7 @@ export default function CloudHubResume({ onNavigate, siteContent }) {
           {resume.updatedAt}
         </p>
         <a
-          href={resume.url}
+          href="https://d2tkxio02lhvef.cloudfront.net/"
           target="_blank"
           rel="noreferrer"
           style={{
@@ -37,7 +37,7 @@ export default function CloudHubResume({ onNavigate, siteContent }) {
             padding: "12px 20px",
           }}
         >
-          Open {resume.title}
+        View My Resume
         </a>
       </main>
       <FooterSection />
