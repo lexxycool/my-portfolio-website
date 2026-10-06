@@ -22,7 +22,7 @@ export default function CloudHubResume({ onNavigate, siteContent }) {
           {resume.updatedAt}
         </p>
         <a
-          href="https://d2tkxio02lhvef.cloudfront.net/"
+          href="https://resume.cloudwithobinna.com/"
           target="_blank"
           rel="noreferrer"
           style={{
