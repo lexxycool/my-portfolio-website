@@ -5,7 +5,7 @@ export default function FooterSection() {
   return (
     <footer style={footerSectionStyles.footer}>
       <span style={footerSectionStyles.copyrightText}>
-        &copy; 2024 Obinna. Built with care on Azure.
+        &copy; 2026 Obinna. Built with care on Azure.
       </span>
       <div style={footerSectionStyles.linkRow}>
         <button type="button" style={footerSectionStyles.linkButton}>

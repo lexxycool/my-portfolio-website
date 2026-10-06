@@ -39,17 +39,17 @@ export const defaultSiteContent = {
     {
       title: "Understanding Azure VNets",
       excerpt: "A deep dive into Azure virtual networks and best practices.",
-      meta: "May 12, 2024  ·  5 min read",
+      meta: "May 12, 2026  ·  5 min read",
     },
     {
       title: "Deploying Flask to Azure",
       excerpt: "Step-by-step guide to deploy a Flask app to Azure App Service.",
-      meta: "May 5, 2024  ·  7 min read",
+      meta: "May 5, 2026  ·  7 min read",
     },
     {
       title: "Azure Functions vs App Service",
       excerpt: "When to use Azure Functions or App Service for your workloads.",
-      meta: "Apr 28, 2024  ·  6 min read",
+      meta: "Apr 28, 2026  ·  6 min read",
     },
   ],
   resume: {
