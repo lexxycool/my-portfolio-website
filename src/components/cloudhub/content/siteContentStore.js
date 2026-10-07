@@ -208,15 +208,20 @@ function normalizeLab(item) {
   };
 }
 
+function slugify(text) {
+  return (text || "").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+}
+
 function normalizePost(item) {
   const defaultPost = defaultSiteContent.blogPosts.find(
     (post) => post.slug === item?.slug || post.title === item?.title,
   );
+  const title = item?.title || defaultPost?.title || "Untitled post";
 
   return {
-    slug: item?.slug || defaultPost?.slug || item?.title?.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "") || "",
+    slug: item?.slug || defaultPost?.slug || slugify(title),
     category: item?.category || defaultPost?.category || "Cloud engineering",
-    title: item?.title || defaultPost?.title || "Untitled post",
+    title,
     excerpt: item?.excerpt || defaultPost?.excerpt || "",
     meta: item?.meta || defaultPost?.meta || "",
     content: item?.content || defaultPost?.content || "",
@@ -243,37 +248,26 @@ export function loadSiteContent() {
     return clone(defaultSiteContent);
   }
 
-  const raw = window.localStorage.getItem(STORAGE_KEY);
-  if (raw) {
-    try {
-      return normalizeSiteContent(JSON.parse(raw));
-    } catch (error) {
+  try {
+    const current = window.localStorage.getItem(STORAGE_KEY);
+    if (current) {
+      return normalizeSiteContent(JSON.parse(current));
+    }
+
+    const legacy = window.localStorage.getItem(LEGACY_STORAGE_KEY);
+    if (!legacy) {
       return clone(defaultSiteContent);
     }
-  }
 
-  const legacyRaw = window.localStorage.getItem(LEGACY_STORAGE_KEY);
-  if (!legacyRaw) {
-    return clone(defaultSiteContent);
-  }
-
-  try {
-    const legacyContent = JSON.parse(legacyRaw);
-    const migratedContent = normalizeSiteContent(legacyContent);
-    const newlyAddedPost = defaultSiteContent.blogPosts.find(
-      (post) => post.slug === "building-my-cloud-resume",
-    );
-
-    if (
-      Array.isArray(legacyContent.blogPosts) &&
-      newlyAddedPost &&
-      !migratedContent.blogPosts.some((post) => post.slug === newlyAddedPost.slug)
-    ) {
-      migratedContent.blogPosts.push(clone(newlyAddedPost));
+    // Carry saved v1 content forward, adding the post introduced after v1 was saved.
+    const migrated = normalizeSiteContent(JSON.parse(legacy));
+    const cloudResumePost = defaultSiteContent.blogPosts.find((post) => post.slug === "building-my-cloud-resume");
+    if (!migrated.blogPosts.some((post) => post.slug === cloudResumePost.slug)) {
+      migrated.blogPosts.push(clone(cloudResumePost));
     }
 
-    window.localStorage.setItem(STORAGE_KEY, JSON.stringify(migratedContent));
-    return migratedContent;
+    window.localStorage.setItem(STORAGE_KEY, JSON.stringify(migrated));
+    return migrated;
   } catch (error) {
     return clone(defaultSiteContent);
   }

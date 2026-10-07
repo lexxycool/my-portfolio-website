@@ -5,6 +5,10 @@ import BlogSection from "./cloudhub/sections/BlogSection";
 import { COLORS, FONT_FACE } from "./cloudhub/theme";
 import { cloudHubHomeStyles } from "./cloudhub/pageStyles";
 
+function stripInlineMarkdown(text) {
+  return text.replace(/\*\*(.*?)\*\*/g, "$1").replace(/`([^`]+)`/g, "$1");
+}
+
 function renderArticleContent(content) {
   if (!content) {
     return (
@@ -17,7 +21,6 @@ function renderArticleContent(content) {
   return content
     .trim()
     .split(/\n{2,}/)
-    .filter(Boolean)
     .map((block, index) => {
       const trimmed = block.trim();
 
@@ -45,7 +48,7 @@ function renderArticleContent(content) {
           <ul key={index} style={articleStyles.list}>
             {lines.map((line, itemIndex) => (
               <li key={itemIndex}>
-                {line.replace(/^\s*[-*]\s+/, "").replace(/\*\*(.*?)\*\*/g, "$1").replace(/`([^`]+)`/g, "$1")}
+                {stripInlineMarkdown(line.replace(/^\s*[-*]\s+/, ""))}
               </li>
             ))}
           </ul>
@@ -54,7 +57,7 @@ function renderArticleContent(content) {
 
       return (
         <p key={index} style={articleStyles.paragraph}>
-          {trimmed.replace(/\*\*(.*?)\*\*/g, "$1").replace(/`([^`]+)`/g, "$1")}
+          {stripInlineMarkdown(trimmed)}
         </p>
       );
     });

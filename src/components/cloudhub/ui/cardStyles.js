@@ -154,14 +154,6 @@ export const cardStyles = {
     color: COLORS.cyan,
     marginBottom: 10,
   },
-  blogListTitle: {
-    fontFamily: "'Space Grotesk', sans-serif",
-    fontWeight: 600,
-    fontSize: 24,
-    lineHeight: 1.3,
-    color: COLORS.text,
-    margin: "0 0 10px",
-  },
   blogListExcerpt: {
     fontFamily: "'Inter', sans-serif",
     fontSize: 15,

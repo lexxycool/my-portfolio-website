@@ -52,9 +52,14 @@ function getCurrentPage() {
   return 'home';
 }
 
+function getArticleSlug() {
+  const [, section, slug] = window.location.pathname.split('/');
+  return section === 'blog' && slug ? decodeURIComponent(slug) : '';
+}
+
 function App() {
   const [page, setPage] = useState(getCurrentPage());
-  const [, setNavigationVersion] = useState(0);
+  const [articleSlug, setArticleSlug] = useState(getArticleSlug());
   const [siteContent, setSiteContent] = useState(loadSiteContent);
   const { instance } = useMsal();
   const isMsalAuthenticated = useIsAuthenticated();
@@ -62,7 +67,7 @@ function App() {
   useEffect(() => {
     const onPopState = () => {
       setPage(getCurrentPage());
-      setNavigationVersion((version) => version + 1);
+      setArticleSlug(getArticleSlug());
     };
     window.addEventListener('popstate', onPopState);
 
@@ -99,15 +104,15 @@ function App() {
     }
   }, [page, isMsalAuthenticated]);
 
-  const handleNavigate = (targetPage, articleSlug) => {
+  const handleNavigate = (targetPage, slug) => {
     const nextPath =
       targetPage === 'about'
         ? '/about'
         : targetPage === 'projects'
           ? '/projects'
           : targetPage === 'blog'
-            ? articleSlug
-              ? `/blog/${encodeURIComponent(articleSlug)}`
+            ? slug
+              ? `/blog/${encodeURIComponent(slug)}`
               : '/blog'
             : targetPage === 'labs'
               ? '/labs'
@@ -124,7 +129,7 @@ function App() {
       window.history.pushState({}, '', nextPath);
     }
     setPage(targetPage);
-    setNavigationVersion((version) => version + 1);
+    setArticleSlug(targetPage === 'blog' ? slug || '' : '');
   };
 
   const handleSaveContent = (nextContent) => {
@@ -141,7 +146,7 @@ function App() {
       <CloudHubBlog
         onNavigate={handleNavigate}
         siteContent={siteContent}
-        articleSlug={decodeURIComponent(window.location.pathname.split('/').filter(Boolean)[1] || '')}
+        articleSlug={articleSlug}
       />
     ) : page === 'labs' ? (
       <CloudHubLabs onNavigate={handleNavigate} siteContent={siteContent} />
