@@ -22,8 +22,8 @@ export default function HighlightsSection() {
               <path d="M12 2 3 7v10l9 5 9-5V7z" stroke={COLORS.blue} strokeWidth="1.8" />
             </svg>
           )}
-          title="Azure expertise"
-          desc="Skilled in Azure services, networking, security and DevOps."
+          title="Azure & AWS expertise"
+          desc="Skilled in Azure and AWS services, networking, security and DevOps."
         />
         <Highlight
           icon={(

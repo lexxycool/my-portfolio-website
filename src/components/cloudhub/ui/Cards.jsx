@@ -90,28 +90,7 @@ export function ProjectCard({ variant, title, desc, tags, onViewProject }) {
   );
 }
 
-function BlogThumb({ seed }) {
-  const rand = (index) => {
-    const x = Math.sin(seed * 999 + index * 37) * 10000;
-    return x - Math.floor(x);
-  };
-
-  const points = Array.from({ length: 5 }, (_, index) => `${(index / 4) * 100},${20 + rand(index) * 40}`).join(" ");
-
-  return (
-    <svg viewBox="0 0 200 100" width="100%" height="110" style={cardStyles.thumbSvg}>
-      <rect width="200" height="100" fill={COLORS.surfaceAlt} />
-      <polyline points={points} fill="none" stroke={COLORS.blue} strokeWidth="2" opacity="0.7" />
-      <polyline points={points} fill="none" stroke={COLORS.cyan} strokeWidth="1" opacity="0.4" transform="translate(0,8)" />
-      {[0, 1, 2, 3, 4].map((index) => (
-        <circle key={index} cx={(index / 4) * 200} cy={20 + rand(index) * 40} r="3" fill={COLORS.cyan} />
-      ))}
-    </svg>
-  );
-}
-
 export function BlogCard({
-  seed,
   title,
   excerpt,
   meta,
@@ -136,7 +115,6 @@ export function BlogCard({
 
   return (
     <article style={cardStyles.blogCard}>
-      <BlogThumb seed={seed} />
       <div style={cardStyles.blogBody}>
         <div style={cardStyles.blogTitle}>
           <button type="button" style={cardStyles.blogGridTitleButton} onClick={onClick}>

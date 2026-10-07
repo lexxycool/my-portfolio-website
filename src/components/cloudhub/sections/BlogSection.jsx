@@ -22,10 +22,9 @@ export default function BlogSection({
         onCtaClick={() => onNavigate && onNavigate("blog")}
       />
       <div style={isReadingList ? blogSectionStyles.list : blogSectionStyles.grid}>
-        {posts.map((post, index) => (
+        {posts.map((post) => (
           <BlogCard
             key={post.title}
-            seed={index + 1}
             title={post.title}
             excerpt={post.excerpt}
             meta={post.meta}
