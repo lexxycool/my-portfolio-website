@@ -3,15 +3,25 @@ import { BlogCard, SectionHeader } from "../ui/Cards";
 import { blogSectionStyles } from "./sectionStyles";
 import { defaultSiteContent } from "../content/siteContentStore";
 
-export default function BlogSection({ onNavigate, showCta = true, posts = defaultSiteContent.blogPosts }) {
+export default function BlogSection({
+  onNavigate,
+  showCta = true,
+  layout = "grid",
+  posts = defaultSiteContent.blogPosts,
+}) {
+  const isReadingList = layout === "list";
+
   return (
-    <section style={blogSectionStyles.section}>
+    <section
+      aria-label={isReadingList ? "Blog articles" : undefined}
+      style={isReadingList ? blogSectionStyles.listSection : blogSectionStyles.section}
+    >
       <SectionHeader
-        title="Latest from the blog"
+        title={isReadingList ? "All articles" : "Latest from the blog"}
         cta={showCta ? "View all posts" : null}
         onCtaClick={() => onNavigate && onNavigate("blog")}
       />
-      <div style={blogSectionStyles.grid}>
+      <div style={isReadingList ? blogSectionStyles.list : blogSectionStyles.grid}>
         {posts.map((post, index) => (
           <BlogCard
             key={post.title}
@@ -19,6 +29,9 @@ export default function BlogSection({ onNavigate, showCta = true, posts = defaul
             title={post.title}
             excerpt={post.excerpt}
             meta={post.meta}
+            category={post.category}
+            layout={layout}
+            onClick={() => onNavigate && onNavigate("blog", post.slug)}
           />
         ))}
       </div>

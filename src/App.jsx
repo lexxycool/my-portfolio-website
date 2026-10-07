@@ -25,7 +25,7 @@ function getCurrentPage() {
     return 'projects';
   }
 
-  if (window.location.pathname === '/blog') {
+  if (window.location.pathname === '/blog' || window.location.pathname.startsWith('/blog/')) {
     return 'blog';
   }
 
@@ -54,12 +54,16 @@ function getCurrentPage() {
 
 function App() {
   const [page, setPage] = useState(getCurrentPage());
+  const [, setNavigationVersion] = useState(0);
   const [siteContent, setSiteContent] = useState(loadSiteContent);
   const { instance } = useMsal();
   const isMsalAuthenticated = useIsAuthenticated();
 
   useEffect(() => {
-    const onPopState = () => setPage(getCurrentPage());
+    const onPopState = () => {
+      setPage(getCurrentPage());
+      setNavigationVersion((version) => version + 1);
+    };
     window.addEventListener('popstate', onPopState);
 
     if (window.location.hash.includes('code=') || window.location.hash.includes('state=')) {
@@ -95,14 +99,16 @@ function App() {
     }
   }, [page, isMsalAuthenticated]);
 
-  const handleNavigate = (targetPage) => {
+  const handleNavigate = (targetPage, articleSlug) => {
     const nextPath =
       targetPage === 'about'
         ? '/about'
         : targetPage === 'projects'
           ? '/projects'
           : targetPage === 'blog'
-            ? '/blog'
+            ? articleSlug
+              ? `/blog/${encodeURIComponent(articleSlug)}`
+              : '/blog'
             : targetPage === 'labs'
               ? '/labs'
             : targetPage === 'resume'
@@ -118,6 +124,7 @@ function App() {
       window.history.pushState({}, '', nextPath);
     }
     setPage(targetPage);
+    setNavigationVersion((version) => version + 1);
   };
 
   const handleSaveContent = (nextContent) => {
@@ -131,7 +138,11 @@ function App() {
     ) : page === 'projects' ? (
       <CloudHubProjects onNavigate={handleNavigate} siteContent={siteContent} />
     ) : page === 'blog' ? (
-      <CloudHubBlog onNavigate={handleNavigate} siteContent={siteContent} />
+      <CloudHubBlog
+        onNavigate={handleNavigate}
+        siteContent={siteContent}
+        articleSlug={decodeURIComponent(window.location.pathname.split('/').filter(Boolean)[1] || '')}
+      />
     ) : page === 'labs' ? (
       <CloudHubLabs onNavigate={handleNavigate} siteContent={siteContent} />
     ) : page === 'resume' ? (

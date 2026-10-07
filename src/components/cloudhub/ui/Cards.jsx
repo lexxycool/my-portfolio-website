@@ -110,20 +110,45 @@ function BlogThumb({ seed }) {
   );
 }
 
-export function BlogCard({ seed, title, excerpt, meta }) {
+export function BlogCard({
+  seed,
+  title,
+  excerpt,
+  meta,
+  category,
+  layout = "grid",
+  onClick,
+}) {
+  if (layout === "list") {
+    return (
+      <article style={cardStyles.blogListItem}>
+        {category ? <div style={cardStyles.blogCategory}>{category}</div> : null}
+        {meta ? <div style={cardStyles.blogListMeta}>{meta}</div> : null}
+        <h3 style={{ margin: 0 }}>
+          <button type="button" style={cardStyles.blogTitleButton} onClick={onClick}>
+            {title}
+          </button>
+        </h3>
+        {excerpt ? <p style={cardStyles.blogListExcerpt}>{excerpt}</p> : null}
+      </article>
+    );
+  }
+
   return (
-    <div style={cardStyles.blogCard}>
+    <article style={cardStyles.blogCard}>
       <BlogThumb seed={seed} />
       <div style={cardStyles.blogBody}>
         <div style={cardStyles.blogTitle}>
-          {title}
+          <button type="button" style={cardStyles.blogGridTitleButton} onClick={onClick}>
+            {title}
+          </button>
         </div>
         <div style={cardStyles.blogExcerpt}>
           {excerpt}
         </div>
         <div style={cardStyles.blogMeta}>{meta}</div>
       </div>
-    </div>
+    </article>
   );
 }
 

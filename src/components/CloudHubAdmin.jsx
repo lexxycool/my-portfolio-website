@@ -225,10 +225,18 @@ export default function CloudHubAdmin({ onNavigate, siteContent, onSaveContent }
 
         <SectionCard
           title="Blog"
-          onAdd={() => addListItem("blogPosts", { title: "", excerpt: "", meta: "" })}
+          onAdd={() => addListItem("blogPosts", { slug: "", category: "", title: "", excerpt: "", meta: "", content: "" })}
         >
           {draft.blogPosts.map((post, index) => (
             <div key={`post-${index}`} style={{ borderTop: index ? `1px solid ${COLORS.border}` : "none", paddingTop: index ? 14 : 0, marginTop: index ? 14 : 0 }}>
+              <div style={{ display: "grid", gridTemplateColumns: "160px 1fr", gap: 12, marginBottom: 10 }}>
+                <label style={{ fontFamily: "'Inter', sans-serif", color: COLORS.textMuted, fontSize: 13 }}>URL slug</label>
+                <input value={post.slug} onChange={(event) => updateListItem("blogPosts", index, "slug", event.target.value)} style={fieldStyles.input} />
+              </div>
+              <div style={{ display: "grid", gridTemplateColumns: "160px 1fr", gap: 12, marginBottom: 10 }}>
+                <label style={{ fontFamily: "'Inter', sans-serif", color: COLORS.textMuted, fontSize: 13 }}>Topic</label>
+                <input value={post.category} onChange={(event) => updateListItem("blogPosts", index, "category", event.target.value)} style={fieldStyles.input} />
+              </div>
               <div style={{ display: "grid", gridTemplateColumns: "160px 1fr", gap: 12, marginBottom: 10 }}>
                 <label style={{ fontFamily: "'Inter', sans-serif", color: COLORS.textMuted, fontSize: 13 }}>Title</label>
                 <input value={post.title} onChange={(event) => updateListItem("blogPosts", index, "title", event.target.value)} style={fieldStyles.input} />
@@ -240,6 +248,10 @@ export default function CloudHubAdmin({ onNavigate, siteContent, onSaveContent }
               <div style={{ display: "grid", gridTemplateColumns: "160px 1fr", gap: 12 }}>
                 <label style={{ fontFamily: "'Inter', sans-serif", color: COLORS.textMuted, fontSize: 13 }}>Meta</label>
                 <input value={post.meta} onChange={(event) => updateListItem("blogPosts", index, "meta", event.target.value)} style={fieldStyles.input} />
+              </div>
+              <div style={{ display: "grid", gridTemplateColumns: "160px 1fr", gap: 12, marginTop: 10 }}>
+                <label style={{ fontFamily: "'Inter', sans-serif", color: COLORS.textMuted, fontSize: 13 }}>Article (Markdown)</label>
+                <textarea value={post.content} onChange={(event) => updateListItem("blogPosts", index, "content", event.target.value)} style={{ ...fieldStyles.textarea, minHeight: 240 }} />
               </div>
               <RowActions onDelete={() => removeListItem("blogPosts", index)} />
             </div>

@@ -86,10 +86,19 @@ export const projectsSectionStyles = {
 
 export const blogSectionStyles = {
   section: { padding: "0 48px 72px" },
+  listSection: {
+    maxWidth: 900,
+    margin: "0 auto",
+    padding: "8px clamp(20px, 6vw, 48px) 80px",
+  },
   grid: {
     display: "grid",
     gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))",
     gap: 18,
+  },
+  list: {
+    display: "flex",
+    flexDirection: "column",
   },
 };
 
