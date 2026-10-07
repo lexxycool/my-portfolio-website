@@ -228,12 +228,23 @@ function normalizePost(item) {
   };
 }
 
+function uniqueSlugs(posts) {
+  const used = new Set();
+  return posts.map((post) => {
+    const base = slugify(post.slug) || slugify(post.title) || "post";
+    let slug = base;
+    for (let n = 2; used.has(slug); n += 1) slug = `${base}-${n}`;
+    used.add(slug);
+    return { ...post, slug };
+  });
+}
+
 export function normalizeSiteContent(content) {
   const source = content || {};
   return {
     projects: Array.isArray(source.projects) ? source.projects.map(normalizeProject) : clone(defaultSiteContent.projects),
     labs: Array.isArray(source.labs) ? source.labs.map(normalizeLab) : clone(defaultSiteContent.labs),
-    blogPosts: Array.isArray(source.blogPosts) ? source.blogPosts.map(normalizePost) : clone(defaultSiteContent.blogPosts),
+    blogPosts: Array.isArray(source.blogPosts) ? uniqueSlugs(source.blogPosts.map(normalizePost)) : clone(defaultSiteContent.blogPosts),
     resume: {
       title: source.resume?.title || defaultSiteContent.resume.title,
       summary: source.resume?.summary || defaultSiteContent.resume.summary,

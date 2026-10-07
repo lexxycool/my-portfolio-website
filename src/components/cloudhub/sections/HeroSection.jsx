@@ -12,7 +12,7 @@ export default function HeroSection({ typed, full, onNavigate }) {
           <span style={heroCursorStyle(typed.length < full.length)}>|</span>
         </h1>
         <p style={heroSectionStyles.subtitle}>
-          Building secure, scalable and reliable cloud solutions on Microsoft Azure.
+          Building secure, scalable and reliable cloud solutions on Microsoft Azure and AWS.
         </p>
         <div style={heroSectionStyles.actionRow}>
           <button

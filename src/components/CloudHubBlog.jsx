@@ -5,9 +5,22 @@ import BlogSection from "./cloudhub/sections/BlogSection";
 import { COLORS, FONT_FACE } from "./cloudhub/theme";
 import { cloudHubHomeStyles } from "./cloudhub/pageStyles";
 
-function stripInlineMarkdown(text) {
-  return text.replace(/\*\*(.*?)\*\*/g, "$1").replace(/`([^`]+)`/g, "$1");
+function renderInline(text) {
+  return text.split(/(\*\*[^*]+\*\*|`[^`]+`)/g).map((part, index) => {
+    if (part.startsWith("**") && part.endsWith("**") && part.length > 4) {
+      return <strong key={index}>{part.slice(2, -2)}</strong>;
+    }
+    if (part.startsWith("`") && part.endsWith("`") && part.length > 2) {
+      return <code key={index} style={articleStyles.inlineCode}>{part.slice(1, -1)}</code>;
+    }
+    return part;
+  });
 }
+
+const BULLET = /^\s*[-*]\s+/;
+const NUMBERED = /^\s*\d+[.)]\s+/;
+const startsBlock = (line) =>
+  /^```|^#{1,6}\s|^>\s?|^-{3,}\s*$/.test(line) || BULLET.test(line) || NUMBERED.test(line);
 
 function renderArticleContent(content) {
   if (!content) {
@@ -18,49 +31,82 @@ function renderArticleContent(content) {
     );
   }
 
-  return content
-    .trim()
-    .split(/\n{2,}/)
-    .map((block, index) => {
-      const trimmed = block.trim();
+  const lines = content.replace(/\r\n?/g, "\n").trim().split("\n");
+  const blocks = [];
+  let i = 0;
 
-      if (trimmed.startsWith("```")) {
-        return (
-          <pre key={index} style={articleStyles.code}>
-            <code>{trimmed.replace(/^```[^\n]*\n?/, "").replace(/\n?```$/, "")}</code>
-          </pre>
-        );
+  while (i < lines.length) {
+    const line = lines[i];
+    const key = blocks.length;
+
+    if (!line.trim()) {
+      i += 1;
+    } else if (line.trim().startsWith("```")) {
+      const code = [];
+      i += 1;
+      while (i < lines.length && !lines[i].trim().startsWith("```")) {
+        code.push(lines[i]);
+        i += 1;
       }
-
-      if (/^#{1,3}\s/.test(trimmed)) {
-        const level = Math.min(trimmed.match(/^#+/)[0].length, 3);
-        const Heading = `h${level}`;
-        return (
-          <Heading key={index} style={articleStyles.heading}>
-            {trimmed.replace(/^#{1,3}\s+/, "")}
-          </Heading>
-        );
+      i += 1;
+      blocks.push(
+        <pre key={key} style={articleStyles.code}>
+          <code>{code.join("\n")}</code>
+        </pre>
+      );
+    } else if (/^-{3,}\s*$/.test(line.trim())) {
+      blocks.push(<hr key={key} style={articleStyles.rule} />);
+      i += 1;
+    } else if (/^#{1,6}\s/.test(line)) {
+      const level = Math.min(line.match(/^#+/)[0].length, 3);
+      const Heading = `h${level}`;
+      blocks.push(
+        <Heading key={key} style={articleStyles.heading}>
+          {renderInline(line.replace(/^#+\s+/, ""))}
+        </Heading>
+      );
+      i += 1;
+    } else if (/^>\s?/.test(line)) {
+      const quote = [];
+      while (i < lines.length && /^>\s?/.test(lines[i])) {
+        quote.push(lines[i].replace(/^>\s?/, ""));
+        i += 1;
       }
-
-      const lines = trimmed.split("\n");
-      if (lines.every((line) => /^\s*[-*]\s+/.test(line))) {
-        return (
-          <ul key={index} style={articleStyles.list}>
-            {lines.map((line, itemIndex) => (
-              <li key={itemIndex}>
-                {stripInlineMarkdown(line.replace(/^\s*[-*]\s+/, ""))}
-              </li>
-            ))}
-          </ul>
-        );
+      blocks.push(
+        <blockquote key={key} style={articleStyles.quote}>
+          {renderInline(quote.join(" "))}
+        </blockquote>
+      );
+    } else if (BULLET.test(line) || NUMBERED.test(line)) {
+      const pattern = BULLET.test(line) ? BULLET : NUMBERED;
+      const Tag = pattern === BULLET ? "ul" : "ol";
+      const items = [];
+      while (i < lines.length && pattern.test(lines[i])) {
+        items.push(lines[i].replace(pattern, ""));
+        i += 1;
       }
-
-      return (
-        <p key={index} style={articleStyles.paragraph}>
-          {stripInlineMarkdown(trimmed)}
+      blocks.push(
+        <Tag key={key} style={articleStyles.list}>
+          {items.map((item, itemIndex) => (
+            <li key={itemIndex}>{renderInline(item)}</li>
+          ))}
+        </Tag>
+      );
+    } else {
+      const paragraph = [];
+      while (i < lines.length && lines[i].trim() && !(paragraph.length && startsBlock(lines[i]))) {
+        paragraph.push(lines[i].trim());
+        i += 1;
+      }
+      blocks.push(
+        <p key={key} style={articleStyles.paragraph}>
+          {renderInline(paragraph.join(" "))}
         </p>
       );
-    });
+    }
+  }
+
+  return blocks;
 }
 
 const articleStyles = {
@@ -138,6 +184,28 @@ const articleStyles = {
     padding: 16,
     color: COLORS.cyan,
     lineHeight: 1.6,
+  },
+  inlineCode: {
+    fontFamily: "'JetBrains Mono', monospace",
+    fontSize: "0.9em",
+    color: COLORS.cyan,
+    background: COLORS.surface,
+    borderRadius: 4,
+    padding: "2px 6px",
+  },
+  rule: {
+    border: 0,
+    borderTop: `1px solid ${COLORS.border}`,
+    margin: "32px 0",
+  },
+  quote: {
+    margin: "0 0 20px",
+    padding: "4px 0 4px 18px",
+    borderLeft: `3px solid ${COLORS.cyan}`,
+    color: COLORS.textMuted,
+    fontSize: 16,
+    lineHeight: 1.9,
+    fontStyle: "italic",
   },
   notFound: {
     maxWidth: 820,
