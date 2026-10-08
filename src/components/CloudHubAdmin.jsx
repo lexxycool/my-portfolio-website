@@ -3,7 +3,7 @@ import NavBar from "./cloudhub/layout/NavBar";
 import FooterSection from "./cloudhub/sections/FooterSection";
 import { cloudHubHomeStyles } from "./cloudhub/pageStyles";
 import { COLORS, FONT_FACE } from "./cloudhub/theme";
-import { defaultSiteContent, normalizeSiteContent } from "./cloudhub/content/siteContentStore";
+import { normalizeSiteContent } from "./cloudhub/content/siteContentStore";
 
 function clone(value) {
   return JSON.parse(JSON.stringify(value));
@@ -125,13 +125,6 @@ export default function CloudHubAdmin({ onNavigate, siteContent, onSaveContent }
     setMessage("Saved. Your site content has been updated.");
   };
 
-  const handleReset = () => {
-    const reset = normalizeSiteContent(defaultSiteContent);
-    setDraft(reset);
-    onSaveContent(reset);
-    setMessage("Reset to default content.");
-  };
-
   return (
     <div style={cloudHubHomeStyles.page}>
       <style>{FONT_FACE}</style>
@@ -152,13 +145,6 @@ export default function CloudHubAdmin({ onNavigate, siteContent, onSaveContent }
             style={{ background: COLORS.blue, color: "#fff", border: "none", borderRadius: 8, padding: "10px 14px", cursor: "pointer", fontFamily: "'Inter', sans-serif", fontWeight: 600 }}
           >
             Save changes
-          </button>
-          <button
-            type="button"
-            onClick={handleReset}
-            style={{ background: "transparent", color: COLORS.text, border: `1px solid ${COLORS.borderStrong}`, borderRadius: 8, padding: "10px 14px", cursor: "pointer", fontFamily: "'Inter', sans-serif" }}
-          >
-            Reset defaults
           </button>
           <button
             type="button"

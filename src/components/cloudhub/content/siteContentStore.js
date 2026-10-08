@@ -213,18 +213,15 @@ function slugify(text) {
 }
 
 function normalizePost(item) {
-  const defaultPost = defaultSiteContent.blogPosts.find(
-    (post) => post.slug === item?.slug || post.title === item?.title,
-  );
-  const title = item?.title || defaultPost?.title || "Untitled post";
+  const title = item?.title || "Untitled post";
 
   return {
-    slug: item?.slug || defaultPost?.slug || slugify(title),
-    category: item?.category || defaultPost?.category || "Cloud engineering",
+    slug: item?.slug || slugify(title),
+    category: item?.category || "",
     title,
-    excerpt: item?.excerpt || defaultPost?.excerpt || "",
-    meta: item?.meta || defaultPost?.meta || "",
-    content: item?.content || defaultPost?.content || "",
+    excerpt: item?.excerpt || "",
+    meta: item?.meta || "",
+    content: item?.content || "",
   };
 }
 
@@ -271,7 +268,15 @@ export function loadSiteContent() {
     }
 
     // Carry saved v1 content forward, adding the post introduced after v1 was saved.
-    const migrated = normalizeSiteContent(JSON.parse(legacy));
+    const legacyContent = JSON.parse(legacy);
+    // v1 posts predate slug/topic/content, so fill them in from the built-in post once.
+    if (Array.isArray(legacyContent.blogPosts)) {
+      legacyContent.blogPosts = legacyContent.blogPosts.map((post) => {
+        const builtIn = defaultSiteContent.blogPosts.find((item) => item.title === post?.title);
+        return builtIn ? { ...builtIn, ...post, slug: post.slug || builtIn.slug, category: post.category || builtIn.category, content: post.content || builtIn.content } : post;
+      });
+    }
+    const migrated = normalizeSiteContent(legacyContent);
     const cloudResumePost = defaultSiteContent.blogPosts.find((post) => post.slug === "building-my-cloud-resume");
     if (!migrated.blogPosts.some((post) => post.slug === cloudResumePost.slug)) {
       migrated.blogPosts.push(clone(cloudResumePost));
