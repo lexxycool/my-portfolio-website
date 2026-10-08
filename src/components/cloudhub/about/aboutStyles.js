@@ -106,6 +106,48 @@ export const aboutStyles = {
     textDecoration: "none",
     whiteSpace: "nowrap",
   },
+  certifications: {
+    flex: "1 1 100%",
+    marginTop: 8,
+  },
+  certificationsHeading: {
+    fontFamily: "'Space Grotesk', sans-serif",
+    fontWeight: 700,
+    fontSize: 22,
+    color: COLORS.text,
+    margin: "0 0 16px",
+  },
+  certificationList: {
+    display: "grid",
+    gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
+    maxWidth: 840,
+    gap: 14,
+  },
+  certification: {
+    background: COLORS.surface,
+    border: `1px solid ${COLORS.border}`,
+    borderRadius: 10,
+    padding: "12px 16px",
+    fontFamily: "'Inter', sans-serif",
+    fontSize: 13,
+    lineHeight: 1.55,
+    color: COLORS.textMuted,
+    margin: 0,
+    wordBreak: "break-word",
+  },
+  certificationLink: {
+    color: COLORS.blue,
+    textDecoration: "none",
+    overflowWrap: "anywhere",
+  },
+  certificationId: {
+    whiteSpace: "nowrap",
+  },
+  certificationName: {
+    display: "block",
+    fontWeight: 600,
+    color: COLORS.text,
+  },
   skillsSection: {
     padding: "8px 48px 64px",
   },

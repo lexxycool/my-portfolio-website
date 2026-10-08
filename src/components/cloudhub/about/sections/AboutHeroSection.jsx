@@ -5,6 +5,28 @@ import { AvatarPlaceholder, InfoRow } from "../ui/AboutPrimitives";
 
 const AVATAR_STORAGE_KEY = "cloudhub.about.avatar";
 
+const CERTIFICATIONS = [
+  {
+    name: "AWS Certified Cloud Practitioner",
+    dates: "Sep 2026 – Sep 2029",
+    verifyUrl: "https://aws.amazon.com/verification",
+    idLabel: "Validation Number",
+    id: "71ccdacbf4864e008690940343888eb4",
+  },
+  {
+    name: "Microsoft Certified: Azure Administrator Associate (AZ-104)",
+    dates: "Jul 2026 – Jul 2027",
+    idLabel: "Credential ID",
+    id: "BAA39DF82A92FF7",
+  },
+  {
+    name: "CompTIA Security+",
+    dates: "Apr 2026 – Apr 2029",
+    idLabel: "Credential ID",
+    id: "dc72e254-dc31-443e-81ab-992610621539",
+  },
+];
+
 export default function AboutHeroSection() {
   const [avatarPreview, setAvatarPreview] = React.useState(() => {
     if (typeof window === "undefined") {
@@ -118,10 +140,32 @@ export default function AboutHeroSection() {
             style={aboutStyles.hiddenFileInput}
           />
         </div>
+
       </div>
 
       <div style={aboutStyles.avatarWrap}>
         <AvatarPlaceholder imageSrc={avatarPreview || "/avatar.jpg"} onClick={handlePickPhoto} />
+      </div>
+
+      <div style={aboutStyles.certifications}>
+        <h2 style={aboutStyles.certificationsHeading}>Certifications</h2>
+        <div style={aboutStyles.certificationList}>{CERTIFICATIONS.map((cert) => (
+          <p key={cert.name} style={aboutStyles.certification}>
+            <strong style={aboutStyles.certificationName}>{cert.name}</strong>
+            {cert.dates}
+            {cert.verifyUrl ? (
+              <>
+                <br />
+                Validate at:{" "}
+                <a href={cert.verifyUrl} target="_blank" rel="noreferrer" style={aboutStyles.certificationLink}>
+                  {cert.verifyUrl}
+                </a>
+              </>
+            ) : null}
+            <br />
+            <span style={aboutStyles.certificationId}>{cert.idLabel}: {cert.id}</span>
+          </p>
+        ))}</div>
       </div>
     </section>
   );
