@@ -64,7 +64,7 @@ export default function AboutHeroSection() {
   };
 
   return (
-    <section style={aboutStyles.heroSection}>
+    <section className="about-hero" style={aboutStyles.heroSection}>
       <div style={aboutStyles.heroContent}>
         <div style={aboutStyles.sectionAccent} />
         <h1 style={aboutStyles.heading}>About me</h1>
@@ -143,13 +143,13 @@ export default function AboutHeroSection() {
 
       </div>
 
-      <div style={aboutStyles.avatarWrap}>
+      <div className="about-avatar" style={aboutStyles.avatarWrap}>
         <AvatarPlaceholder imageSrc={avatarPreview || "/avatar.jpg"} onClick={handlePickPhoto} />
       </div>
 
       <div style={aboutStyles.certifications}>
         <h2 style={aboutStyles.certificationsHeading}>Certifications</h2>
-        <div style={aboutStyles.certificationList}>{CERTIFICATIONS.map((cert) => (
+        <div className="certification-list" style={aboutStyles.certificationList}>{CERTIFICATIONS.map((cert) => (
           <p key={cert.name} style={aboutStyles.certification}>
             <strong style={aboutStyles.certificationName}>{cert.name}</strong>
             {cert.dates}
