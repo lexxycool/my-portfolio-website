@@ -32,7 +32,7 @@ export const msalConfig = {
             break;
         }
       },
-    },
+    }, 
   },
 };
 

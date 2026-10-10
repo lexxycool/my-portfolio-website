@@ -60,7 +60,7 @@ export default function NavBar({ activeLink = "Home", onNavigate }) {
   };
 
   return (
-    <nav style={navBarStyles.nav}>
+    <nav className="site-nav" style={navBarStyles.nav}>
       <div style={navBarStyles.brandWrap}>
         <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
           <path d="M7 18a4.5 4.5 0 0 1-.4-8.98A5.5 5.5 0 0 1 17.2 8.1 4 4 0 0 1 17 16H7z" stroke={COLORS.blue} strokeWidth="1.6" />
@@ -70,7 +70,7 @@ export default function NavBar({ activeLink = "Home", onNavigate }) {
         </span>
       </div>
 
-      <div style={navBarStyles.linksWrap}>
+      <div className="site-nav-links" style={navBarStyles.linksWrap}>
         {links.map((label) => (
           <button
             key={label}

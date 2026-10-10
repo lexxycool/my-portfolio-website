@@ -3,7 +3,7 @@ import { footerSectionStyles } from "./sectionStyles";
 
 export default function FooterSection() {
   return (
-    <footer style={footerSectionStyles.footer}>
+    <footer className="site-footer" style={footerSectionStyles.footer}>
       <span style={footerSectionStyles.copyrightText}>
         &copy; 2026 Obinna. Built with care on Azure.
       </span>

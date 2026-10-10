@@ -1,4 +1,4 @@
-import React from "react";
+﻿import React from "react";
 import NavBar from "./cloudhub/layout/NavBar";
 import FooterSection from "./cloudhub/sections/FooterSection";
 import BlogSection from "./cloudhub/sections/BlogSection";
@@ -6,21 +6,28 @@ import { COLORS, FONT_FACE } from "./cloudhub/theme";
 import { cloudHubHomeStyles } from "./cloudhub/pageStyles";
 
 function renderInline(text) {
-  return text.split(/(\*\*[^*]+\*\*|`[^`]+`)/g).map((part, index) => {
+  return text.split(/(\*\*[^*]+\*\*|`[^`]+`|\[[^\]]+\]\([^)]+\))/g).map((part, index) => {
     if (part.startsWith("**") && part.endsWith("**") && part.length > 4) {
       return <strong key={index}>{part.slice(2, -2)}</strong>;
     }
     if (part.startsWith("`") && part.endsWith("`") && part.length > 2) {
       return <code key={index} style={articleStyles.inlineCode}>{part.slice(1, -1)}</code>;
     }
+    const link = part.match(/^\[([^\]]+)\]\((https?:[^)]+)\)$/);
+    if (link) {
+      return <a key={index} href={link[2]} target="_blank" rel="noopener noreferrer" style={{ color: COLORS.cyan }}>{link[1]}</a>;
+    }
     return part;
   });
 }
 
+const isTableRow = (line) => /^\s*\|.*\|\s*$/.test(line);
+const splitRow = (line) => line.trim().slice(1, -1).split("|").map((cell) => cell.trim());
+
 const BULLET = /^\s*[-*]\s+/;
 const NUMBERED = /^\s*\d+[.)]\s+/;
 const startsBlock = (line) =>
-  /^```|^#{1,6}\s|^>\s?|^-{3,}\s*$/.test(line) || BULLET.test(line) || NUMBERED.test(line);
+  /^```|^#{1,6}\s|^>\s?|^-{3,}\s*$/.test(line) || isTableRow(line) || BULLET.test(line) || NUMBERED.test(line);
 
 function renderArticleContent(content) {
   if (!content) {
@@ -58,14 +65,37 @@ function renderArticleContent(content) {
       blocks.push(<hr key={key} style={articleStyles.rule} />);
       i += 1;
     } else if (/^#{1,6}\s/.test(line)) {
-      const level = Math.min(line.match(/^#+/)[0].length, 3);
+      const level = Math.min(line.match(/^#+/)[0].length + 1, 4);
       const Heading = `h${level}`;
       blocks.push(
-        <Heading key={key} style={articleStyles.heading}>
+        <Heading key={key} style={articleStyles.headings[level]}>
           {renderInline(line.replace(/^#+\s+/, ""))}
         </Heading>
       );
       i += 1;
+    } else if (isTableRow(line)) {
+      const rows = [];
+      while (i < lines.length && isTableRow(lines[i])) {
+        rows.push(lines[i]);
+        i += 1;
+      }
+      const body = rows.filter((row) => !/^\s*\|[\s:|-]+\|\s*$/.test(row)).map(splitRow);
+      const [head, ...rest] = body;
+      if (!head) continue;
+      blocks.push(
+        <div key={key} style={articleStyles.tableWrap}>
+          <table style={articleStyles.table}>
+            <thead>
+              <tr>{head.map((cell, c) => <th key={c} style={articleStyles.th}>{renderInline(cell)}</th>)}</tr>
+            </thead>
+            <tbody>
+              {rest.map((row, r) => (
+                <tr key={r}>{row.map((cell, c) => <td key={c} style={articleStyles.td}>{renderInline(cell)}</td>)}</tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      );
     } else if (/^>\s?/.test(line)) {
       const quote = [];
       while (i < lines.length && /^>\s?/.test(lines[i])) {
@@ -156,12 +186,28 @@ const articleStyles = {
     paddingTop: 24,
     fontFamily: "'Inter', sans-serif",
   },
-  heading: {
-    fontFamily: "'Space Grotesk', sans-serif",
-    fontSize: 24,
-    lineHeight: 1.35,
-    color: COLORS.text,
-    margin: "32px 0 12px",
+  headings: {
+    2: {
+      fontFamily: "'Space Grotesk', sans-serif",
+      fontSize: 27,
+      lineHeight: 1.35,
+      color: COLORS.text,
+      margin: "38px 0 14px",
+    },
+    3: {
+      fontFamily: "'Space Grotesk', sans-serif",
+      fontSize: 22,
+      lineHeight: 1.4,
+      color: COLORS.text,
+      margin: "30px 0 12px",
+    },
+    4: {
+      fontFamily: "'Space Grotesk', sans-serif",
+      fontSize: 18,
+      lineHeight: 1.45,
+      color: COLORS.text,
+      margin: "24px 0 10px",
+    },
   },
   paragraph: {
     fontSize: 16,
@@ -184,6 +230,24 @@ const articleStyles = {
     padding: 16,
     color: COLORS.cyan,
     lineHeight: 1.6,
+    fontFamily: "'JetBrains Mono', monospace",
+    fontSize: 13.5,
+    margin: "0 0 20px",
+  },
+  tableWrap: { overflowX: "auto", margin: "0 0 22px" },
+  table: { width: "100%", borderCollapse: "collapse", fontSize: 15, lineHeight: 1.6 },
+  th: {
+    textAlign: "left",
+    padding: "10px 14px",
+    color: COLORS.text,
+    background: COLORS.surface,
+    border: `1px solid ${COLORS.border}`,
+  },
+  td: {
+    padding: "10px 14px",
+    color: COLORS.textMuted,
+    border: `1px solid ${COLORS.border}`,
+    verticalAlign: "top",
   },
   inlineCode: {
     fontFamily: "'JetBrains Mono', monospace",
@@ -237,7 +301,7 @@ export default function CloudHubBlog({ onNavigate, siteContent, articleSlug }) {
               <h1 style={articleStyles.title}>{article.title}</h1>
               {article.excerpt ? <p style={articleStyles.excerpt}>{article.excerpt}</p> : null}
               {article.meta ? <p style={articleStyles.meta}>{article.meta}</p> : null}
-              <div>{renderArticleContent(article.content)}</div>
+              <div style={articleStyles.body}>{renderArticleContent(article.content)}</div>
             </article>
           </main>
         ) : (

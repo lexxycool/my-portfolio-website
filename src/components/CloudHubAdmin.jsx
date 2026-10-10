@@ -130,7 +130,7 @@ export default function CloudHubAdmin({ onNavigate, siteContent, onSaveContent }
       <style>{FONT_FACE}</style>
       <NavBar activeLink="Admin" onNavigate={onNavigate} />
 
-      <main style={{ padding: "48px", maxWidth: 980 }}>
+      <main className="admin-main" style={{ padding: "48px", maxWidth: 980 }}>
         <h1 style={{ margin: "0 0 8px", fontFamily: "'Space Grotesk', sans-serif", fontSize: 40, color: COLORS.blue }}>
           Administrator
         </h1>
@@ -165,7 +165,7 @@ export default function CloudHubAdmin({ onNavigate, siteContent, onSaveContent }
         >
           {draft.projects.map((project, index) => (
             <div key={`project-${index}`} style={{ borderTop: index ? `1px solid ${COLORS.border}` : "none", paddingTop: index ? 14 : 0, marginTop: index ? 14 : 0 }}>
-              <div style={{ display: "grid", gridTemplateColumns: "160px 1fr", gap: 12, marginBottom: 10 }}>
+              <div className="admin-field-row" style={{ display: "grid", gridTemplateColumns: "160px 1fr", gap: 12, marginBottom: 10 }}>
                 <label style={{ fontFamily: "'Inter', sans-serif", color: COLORS.textMuted, fontSize: 13 }}>Variant</label>
                 <select value={project.variant} onChange={(event) => updateListItem("projects", index, "variant", event.target.value)} style={fieldStyles.input}>
                   <option value="network">network</option>
@@ -173,15 +173,15 @@ export default function CloudHubAdmin({ onNavigate, siteContent, onSaveContent }
                   <option value="container">container</option>
                 </select>
               </div>
-              <div style={{ display: "grid", gridTemplateColumns: "160px 1fr", gap: 12, marginBottom: 10 }}>
+              <div className="admin-field-row" style={{ display: "grid", gridTemplateColumns: "160px 1fr", gap: 12, marginBottom: 10 }}>
                 <label style={{ fontFamily: "'Inter', sans-serif", color: COLORS.textMuted, fontSize: 13 }}>Title</label>
                 <input value={project.title} onChange={(event) => updateListItem("projects", index, "title", event.target.value)} style={fieldStyles.input} />
               </div>
-              <div style={{ display: "grid", gridTemplateColumns: "160px 1fr", gap: 12, marginBottom: 10 }}>
+              <div className="admin-field-row" style={{ display: "grid", gridTemplateColumns: "160px 1fr", gap: 12, marginBottom: 10 }}>
                 <label style={{ fontFamily: "'Inter', sans-serif", color: COLORS.textMuted, fontSize: 13 }}>Description</label>
                 <textarea value={project.desc} onChange={(event) => updateListItem("projects", index, "desc", event.target.value)} style={fieldStyles.textarea} />
               </div>
-              <div style={{ display: "grid", gridTemplateColumns: "160px 1fr", gap: 12 }}>
+              <div className="admin-field-row" style={{ display: "grid", gridTemplateColumns: "160px 1fr", gap: 12 }}>
                 <label style={{ fontFamily: "'Inter', sans-serif", color: COLORS.textMuted, fontSize: 13 }}>Tags</label>
                 <input value={(project.tags || []).join(", ")} onChange={(event) => handleProjectTagsChange(index, event.target.value)} style={fieldStyles.input} />
               </div>
@@ -196,11 +196,11 @@ export default function CloudHubAdmin({ onNavigate, siteContent, onSaveContent }
         >
           {draft.labs.map((lab, index) => (
             <div key={`lab-${index}`} style={{ borderTop: index ? `1px solid ${COLORS.border}` : "none", paddingTop: index ? 14 : 0, marginTop: index ? 14 : 0 }}>
-              <div style={{ display: "grid", gridTemplateColumns: "160px 1fr", gap: 12, marginBottom: 10 }}>
+              <div className="admin-field-row" style={{ display: "grid", gridTemplateColumns: "160px 1fr", gap: 12, marginBottom: 10 }}>
                 <label style={{ fontFamily: "'Inter', sans-serif", color: COLORS.textMuted, fontSize: 13 }}>Title</label>
                 <input value={lab.title} onChange={(event) => updateListItem("labs", index, "title", event.target.value)} style={fieldStyles.input} />
               </div>
-              <div style={{ display: "grid", gridTemplateColumns: "160px 1fr", gap: 12 }}>
+              <div className="admin-field-row" style={{ display: "grid", gridTemplateColumns: "160px 1fr", gap: 12 }}>
                 <label style={{ fontFamily: "'Inter', sans-serif", color: COLORS.textMuted, fontSize: 13 }}>Description</label>
                 <textarea value={lab.desc} onChange={(event) => updateListItem("labs", index, "desc", event.target.value)} style={fieldStyles.textarea} />
               </div>
@@ -215,27 +215,27 @@ export default function CloudHubAdmin({ onNavigate, siteContent, onSaveContent }
         >
           {draft.blogPosts.map((post, index) => (
             <div key={`post-${index}`} style={{ borderTop: index ? `1px solid ${COLORS.border}` : "none", paddingTop: index ? 14 : 0, marginTop: index ? 14 : 0 }}>
-              <div style={{ display: "grid", gridTemplateColumns: "160px 1fr", gap: 12, marginBottom: 10 }}>
+              <div className="admin-field-row" style={{ display: "grid", gridTemplateColumns: "160px 1fr", gap: 12, marginBottom: 10 }}>
                 <label style={{ fontFamily: "'Inter', sans-serif", color: COLORS.textMuted, fontSize: 13 }}>URL slug</label>
                 <input value={post.slug} onChange={(event) => updateListItem("blogPosts", index, "slug", event.target.value)} style={fieldStyles.input} />
               </div>
-              <div style={{ display: "grid", gridTemplateColumns: "160px 1fr", gap: 12, marginBottom: 10 }}>
+              <div className="admin-field-row" style={{ display: "grid", gridTemplateColumns: "160px 1fr", gap: 12, marginBottom: 10 }}>
                 <label style={{ fontFamily: "'Inter', sans-serif", color: COLORS.textMuted, fontSize: 13 }}>Topic</label>
                 <input value={post.category} onChange={(event) => updateListItem("blogPosts", index, "category", event.target.value)} style={fieldStyles.input} />
               </div>
-              <div style={{ display: "grid", gridTemplateColumns: "160px 1fr", gap: 12, marginBottom: 10 }}>
+              <div className="admin-field-row" style={{ display: "grid", gridTemplateColumns: "160px 1fr", gap: 12, marginBottom: 10 }}>
                 <label style={{ fontFamily: "'Inter', sans-serif", color: COLORS.textMuted, fontSize: 13 }}>Title</label>
                 <input value={post.title} onChange={(event) => updateListItem("blogPosts", index, "title", event.target.value)} style={fieldStyles.input} />
               </div>
-              <div style={{ display: "grid", gridTemplateColumns: "160px 1fr", gap: 12, marginBottom: 10 }}>
+              <div className="admin-field-row" style={{ display: "grid", gridTemplateColumns: "160px 1fr", gap: 12, marginBottom: 10 }}>
                 <label style={{ fontFamily: "'Inter', sans-serif", color: COLORS.textMuted, fontSize: 13 }}>Excerpt</label>
                 <textarea value={post.excerpt} onChange={(event) => updateListItem("blogPosts", index, "excerpt", event.target.value)} style={fieldStyles.textarea} />
               </div>
-              <div style={{ display: "grid", gridTemplateColumns: "160px 1fr", gap: 12 }}>
+              <div className="admin-field-row" style={{ display: "grid", gridTemplateColumns: "160px 1fr", gap: 12 }}>
                 <label style={{ fontFamily: "'Inter', sans-serif", color: COLORS.textMuted, fontSize: 13 }}>Meta</label>
                 <input value={post.meta} onChange={(event) => updateListItem("blogPosts", index, "meta", event.target.value)} style={fieldStyles.input} />
               </div>
-              <div style={{ display: "grid", gridTemplateColumns: "160px 1fr", gap: 12, marginTop: 10 }}>
+              <div className="admin-field-row" style={{ display: "grid", gridTemplateColumns: "160px 1fr", gap: 12, marginTop: 10 }}>
                 <label style={{ fontFamily: "'Inter', sans-serif", color: COLORS.textMuted, fontSize: 13 }}>Article (Markdown)</label>
                 <textarea value={post.content} onChange={(event) => updateListItem("blogPosts", index, "content", event.target.value)} style={{ ...fieldStyles.textarea, minHeight: 240 }} />
               </div>

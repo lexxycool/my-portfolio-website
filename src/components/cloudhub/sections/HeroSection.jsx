@@ -4,7 +4,7 @@ import { heroCursorStyle, heroSectionStyles } from "./sectionStyles";
 
 export default function HeroSection({ typed, full, onNavigate }) {
   return (
-    <section style={heroSectionStyles.section}>
+    <section className="home-hero" style={heroSectionStyles.section}>
       <div style={heroSectionStyles.contentWrap}>
         <div style={heroSectionStyles.introText}>Hi, I'm Obinna</div>
         <h1 style={heroSectionStyles.title}>
