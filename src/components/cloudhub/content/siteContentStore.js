@@ -42,49 +42,106 @@ export const defaultSiteContent = {
       category: "AWS & Azure",
       title: "Building My Cloud Resume: From HTML Resume to a Multi-Cloud AWS Deployment",
       excerpt: "How I built a cloud resume with S3, CloudFront, HTTPS, and Azure DNS—and what I learned while troubleshooting it.",
-      meta: "Oct 6, 2026  ·  8 min read",
+      meta: "Oct 6, 2026  ·  10 min read",
       content: `## Introduction
 
-The Cloud Resume Challenge gave me a way to bring together HTML, CSS, JavaScript, AWS, DNS, and security in a working project. Rather than only listing cloud technologies on a resume, I wanted to build and deploy a resume website and document the problems I had to solve along the way.
+The Cloud Resume Challenge is often described as a way to demonstrate cloud skills by building and deploying a resume website using cloud technologies.
 
-The finished project uses Amazon S3 to store the site, CloudFront to deliver it, AWS Certificate Manager (ACM) for HTTPS, and Azure DNS to manage the domain. The services have separate responsibilities, which made the project a useful exercise in understanding the full request path.
+For me, the project became much more than simply putting an HTML resume online.
 
-## The goal and the website
+It gave me an opportunity to take concepts I had been learning—AWS, S3, CloudFront, DNS, SSL/TLS, IAM, JavaScript, and infrastructure configuration—and put them together into a real working project.
 
-The goal was to build a resume website with a visitor counter and deploy it using AWS. I separated the resume into HTML, CSS, and JavaScript files so that the content, presentation, and client-side behavior were easier to work on independently.
+More importantly, I wanted to document the problems I encountered along the way.
 
-The challenge was not only to make the page render. I also wanted to use a custom domain, serve the site over HTTPS, and avoid exposing the S3 bucket as the public-facing endpoint.
+A project that works perfectly after following a tutorial doesn't necessarily demonstrate that you understand the technology. Troubleshooting a project when something goes wrong is where much of the real learning happens.
 
-## Hosting with S3 and CloudFront
+This blog documents how I built my cloud resume, the architecture I ended up with, the challenges I encountered, and how I solved them
 
-I stored the static website files in an S3 bucket and put a CloudFront distribution in front of that origin. I configured CloudFront Origin Access Control (OAC) so CloudFront could retrieve objects from S3 without making the bucket publicly readable.
+## The Goal
 
-The initial request to the CloudFront URL returned **Access Denied**. My first instinct was to focus on the bucket policy. After reviewing the OAC permissions, I checked the rest of the request path and found that the distribution had no Default Root Object configured. A request to the site root did not automatically resolve to the resume page.
+The goal was straightforward:
 
-Setting the Default Root Object to \`index.html\` fixed the root request after the distribution configuration deployed. The key lesson was that an error response can originate from a different part of the request path than its wording first suggests.
+### Build a resume website and deploy it to the cloud using AWS.
 
-## Connecting a custom domain
+I wanted the finished project to include:
 
-My domain's DNS was managed in Azure DNS, while the website was delivered by AWS CloudFront. I kept the DNS zone in Azure and created a record for the resume subdomain that pointed to the CloudFront distribution.
+ * An HTML/CSS resume
 
-For HTTPS, I requested a public certificate in ACM for the custom hostname. CloudFront requires its ACM certificate to be in the \`us-east-1\` region. I selected DNS validation, then added the CNAME record ACM provided to the Azure DNS zone.
+ * Amazon S3 for hosting the website files
 
-The validation CNAME and the website's routing record serve different purposes. ACM's CNAME proves control of the domain; the separate record for the resume subdomain sends visitors to CloudFront. After ACM issued the certificate, I attached it to the distribution and configured the custom hostname.
+ * Amazon CloudFront for content delivery
 
-## The request path
+ * AWS Certificate Manager (ACM) for HTTPS
 
-When a visitor opens the HTTPS resume URL, DNS resolves the hostname to CloudFront. CloudFront presents the ACM certificate, then uses OAC to request the site files from S3. The response travels back through CloudFront to the browser.
+ * DNS configuration
 
-That path involves several independent pieces: DNS, the certificate, the CloudFront distribution, OAC, the bucket policy, and the S3 objects. Checking each boundary made it easier to find configuration mistakes.
+ * Secure access between CloudFront and S3
 
-## What I learned
+I also wanted the project to become part of my broader cloud portfolio.
 
-- S3 stores the files; CloudFront delivers them; ACM provides the certificate; DNS resolves the hostname.
-- DNS validation and visitor routing are separate DNS records with different purposes.
-- A CloudFront **Access Denied** response is not proof that the bucket policy is the only problem.
-- Troubleshooting works best when each step of the request path is verified instead of guessing from the final error.
+Instead of simply having a resume that said I understood AWS, I wanted to be able to point to an actual AWS deployment and explain how it worked.
 
-This project became a practical multi-cloud deployment: Azure DNS manages the domain while AWS hosts and delivers the resume. More than any single service, the biggest value was learning to understand and troubleshoot how the pieces work together.`,
+Building the Resume Website
+
+The first part of the project was creating the resume itself.
+
+I converted my resume into HTML and separated the presentation layer into a CSS file.
+
+The basic structure looked like this:
+    
+   \`\`\`
+    resume/
+    ├── index.html
+    └── style.css
+  \`\`\`
+  This was important because the Cloud Resume Challenge isn't only about infrastructure. It also requires demonstrating that you can build and work with the application itself.
+
+### Hosting the Resume in Amazon S3
+
+Once the website was ready, I created an Amazon S3 bucket to store the website files.
+
+The basic architecture was:
+
+      \`\`\`
+      Browser
+         |
+         v
+      Amazon S3
+         |
+         ├── index.html
+         └── style.css
+      \`\`\`
+
+S3 provided the storage layer for my static website.
+
+However, I didn't want the S3 bucket to be the public-facing endpoint. Instead, I wanted CloudFront to sit in front of S3.
+
+That gave me a more realistic cloud architecture.
+
+### Adding Amazon CloudFront
+
+The next step was creating an Amazon CloudFront distribution.
+
+The architecture became:
+
+    \`\`\`
+      User
+       |
+       v
+   CloudFront
+       |
+       v
+      S3
+       |
+       └── Resume Website
+    \`\`\`
+  
+CloudFront would act as the content delivery layer while S3 remained the origin containing the website files.
+
+I also configured CloudFront Origin Access Control (OAC) so that CloudFront could securely retrieve objects from my S3 bucket.
+
+This meant the S3 bucket did not have to expose the website files publicly.
+`,
     },
   ],
   resume: {
