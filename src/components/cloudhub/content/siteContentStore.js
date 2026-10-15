@@ -43,7 +43,7 @@ export const defaultSiteContent = {
       title: "Building My Cloud Resume: From HTML Resume to a Multi-Cloud AWS Deployment",
       excerpt: "How I built a cloud resume with S3, CloudFront, HTTPS, and Azure DNS—and what I learned while troubleshooting it.",
       meta: "Oct 6, 2026  ·  10 min read",
-      content: `## Introduction
+      content: `# Introduction
 
 The Cloud Resume Challenge is often described as a way to demonstrate cloud skills by building and deploying a resume website using cloud technologies.
 
@@ -108,25 +108,87 @@ The architecture looked like this:
       ├── index.html
       └── style.cs
   \`\`\`
-  This was important because the Cloud Resume Challenge isn't only about infrastructure. It also requires demonstrating that you can build and work with the application itself.
-
-### Hosting the Resume in Amazon S3
-
-Once the website was ready, I created an Amazon S3 bucket to store the website files.
-
-The basic architecture was:
-
-      \`\`\`
-      Browser
-         |
-         v
-      Amazon S3
-         |
-         ├── index.html
-         └── style.css
-      \`\`\`
-
 This project also gave me hands-on experience integrating services across two cloud providers.
+
+## Challenge #1: CloudFront Returned "Access Denied"
+
+After configuring S3 and CloudFront, I opened the CloudFront URL expecting to see my resume. Instead, I received an Access Denied error.
+
+My first assumption was that the S3 bucket policy or OAC configuration was incorrect. I reviewed the permissions and investigated the request path.
+
+### Eventually, I discovered the actual issue: I had not configured CloudFront's Default Root Object.
+
+When someone accessed the root URL, CloudFront did not know to serve index.html.
+
+I set the Default Root Object to:
+\`\`\`
+index.html
+\`\`\`
+After the configuration change deployed, the website loaded successfully.
+
+### What I learned: An error message doesn't always identify the root cause. Instead of immediately changing permissions, I needed to check the entire request path, including CloudFront's distribution settings.
+
+
+## Challenge #2: Connecting My Custom Domain
+
+I wanted to use my own domain instead of the long CloudFront-generated URL.
+
+My domain, cloudwithobinna.com, used Azure DNS. Rather than moving DNS management to AWS Route 53, I created the subdomain:
+
+resume.cloudwithobinna.com
+
+This required connecting the subdomain to my CloudFront distribution and configuring HTTPS.
+
+I learned that I could keep DNS in Azure while hosting the website on AWS. The important part was configuring the DNS records correctly.
+
+
+## Challenge #3: Configuring HTTPS with AWS Certificate Manager
+
+To enable HTTPS, I requested a public certificate through AWS Certificate Manager for resume.cloudwithobinna.com.
+
+CloudFront requires its ACM certificate to be in the US East (N. Virginia) region (us-east-1), so I created the certificate there.
+
+I selected DNS validation, and ACM provided a CNAME record that I added to my Azure DNS zone.
+
+Initially, the certificate remained in Pending validation. After checking the record and allowing time for AWS to verify it, the certificate status changed to Issued.
+
+One important lesson was understanding the difference between two DNS records:
+
+ACM validation CNAME: Proves control of the domain.
+
+Website routing record: Directs visitors to the CloudFront distribution.
+
+They serve different purposes, and configuring one does not replace the other.
+
+
+### What I Learned
+
+This project reinforced four important lessons.
+
+### 1. Cloud services have different responsibilities.
+
+S3 stores the website files, CloudFront delivers content, ACM provides the certificate, DNS resolves the domain, and OAC secures access to the S3 origin.
+
+### 2. Troubleshooting requires a systematic approach.
+
+The missing Default Root Object taught me not to assume every Access Denied error is caused by permissions.
+
+### 3. DNS and HTTPS solve different problems.
+
+DNS directs traffic to the correct destination, while HTTPS protects the connection and uses a valid certificate for the domain.
+
+### 4. Multi-cloud architectures can be practical.
+
+I kept Azure DNS while using AWS for hosting, content delivery, and certificate management. I didn't need to move every component to a single provider.
+
+
+## Conclusion
+
+The Cloud Resume Challenge became more than a website deployment exercise. It gave me practical experience configuring cloud services, integrating DNS and HTTPS, securing an S3 origin, and troubleshooting a real deployment.
+
+The most important lesson was that knowing what each service does is only part of working in the cloud. You also need to understand how those services interact and how to investigate problems when something doesn't work as expected.
+
+### The biggest takeaway: I didn't just learn how to deploy a website. I learned how to troubleshoot the architecture behind it.
 `,
     },
   ],
