@@ -57,7 +57,7 @@ A project that works perfectly after following a tutorial doesn't necessarily de
 
 This blog documents how I built my cloud resume, the architecture I ended up with, the challenges I encountered, and how I solved them
 
-## The Goal
+## The Archecture
 
 The goal was straightforward:
 
@@ -81,18 +81,32 @@ I also wanted the project to become part of my broader cloud portfolio.
 
 Instead of simply having a resume that said I understood AWS, I wanted to be able to point to an actual AWS deployment and explain how it worked.
 
-Building the Resume Website
+The website files were stored in Amazon S3, while CloudFront handled content delivery and HTTPS. I used Origin Access Control to allow CloudFront to access the S3 origin securely, without making the bucket's objects publicly accessible.
 
-The first part of the project was creating the resume itself.
+I also connected a custom subdomain, resume.cloudwithobinna.com, using Azure DNS.
 
-I converted my resume into HTML and separated the presentation layer into a CSS file.
-
-The basic structure looked like this:
+The architecture looked like this:
     
    \`\`\`
-    resume/
-    ├── index.html
-    └── style.css
+    Visitor
+      |
+      v
+   Azure DNS
+      |
+      v
+  resume.cloudwithobinna.com
+      |
+      v
+  AWS CloudFront + HTTPS
+      |
+      v
+  Origin Access Control (OAC)
+      |
+      v
+  Amazon S3
+      |
+      ├── index.html
+      └── style.cs
   \`\`\`
   This was important because the Cloud Resume Challenge isn't only about infrastructure. It also requires demonstrating that you can build and work with the application itself.
 
@@ -112,35 +126,7 @@ The basic architecture was:
          └── style.css
       \`\`\`
 
-S3 provided the storage layer for my static website.
-
-However, I didn't want the S3 bucket to be the public-facing endpoint. Instead, I wanted CloudFront to sit in front of S3.
-
-That gave me a more realistic cloud architecture.
-
-### Adding Amazon CloudFront
-
-The next step was creating an Amazon CloudFront distribution.
-
-The architecture became:
-
-    \`\`\`
-      User
-       |
-       v
-   CloudFront
-       |
-       v
-      S3
-       |
-       └── Resume Website
-    \`\`\`
-  
-CloudFront would act as the content delivery layer while S3 remained the origin containing the website files.
-
-I also configured CloudFront Origin Access Control (OAC) so that CloudFront could securely retrieve objects from my S3 bucket.
-
-This meant the S3 bucket did not have to expose the website files publicly.
+This project also gave me hands-on experience integrating services across two cloud providers.
 `,
     },
   ],
