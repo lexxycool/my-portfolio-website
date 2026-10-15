@@ -20,7 +20,14 @@ export default function HeroSection({ typed, full, onNavigate }) {
             style={heroSectionStyles.primaryAction}
             onClick={() => onNavigate && onNavigate("projects")}
           >
-            View projects
+            View Projects
+          </button>
+          <button
+            type="button"
+            style={heroSectionStyles.primaryAction}
+            onClick={() => onNavigate && onNavigate("contact")}
+          >
+            Get In Touch
           </button>
         </div>
       </div>
