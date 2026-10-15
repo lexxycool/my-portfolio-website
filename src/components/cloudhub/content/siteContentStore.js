@@ -41,27 +41,29 @@ export const defaultSiteContent = {
       slug: "building-my-cloud-resume",
       category: "AWS & Azure",
       title: "Building My Cloud Resume: From HTML Resume to a Multi-Cloud AWS Deployment",
-      excerpt: "How I built a cloud resume with S3, CloudFront, HTTPS, and Azure DNS—and what I learned while troubleshooting it.",
-      meta: "Oct 6, 2026  ·  10 min read",
+      excerpt: "How I built a cloud resume with AWS S3, CloudFront, and Azure DNS—and what I learned while troubleshooting it.",
+      meta: "Oct 14 2026  ·  8 min read",
       content: `# Introduction
 
 The Cloud Resume Challenge is often described as a way to demonstrate cloud skills by building and deploying a resume website using cloud technologies.
 
 For me, the project became much more than simply putting an HTML resume online.
 
-It gave me an opportunity to take concepts I had been learning—AWS, S3, CloudFront, DNS, SSL/TLS, IAM, JavaScript, and infrastructure configuration—and put them together into a real working project.
+It gave me an opportunity to take concepts I had been learning—AWS, S3, CloudFront, DNS, SSL/TLS, IAM, and infrastructure configuration—and put them together into a real working project.
 
 More importantly, I wanted to document the problems I encountered along the way.
 
 A project that works perfectly after following a tutorial doesn't necessarily demonstrate that you understand the technology. Troubleshooting a project when something goes wrong is where much of the real learning happens.
 
-This blog documents how I built my cloud resume, the architecture I ended up with, the challenges I encountered, and how I solved them
+This blog documents how I built my cloud resume, the architecture I ended up with, the challenges I encountered, and how I solved them.
 
 ## The Archecture
 
 The goal was straightforward:
 
 ### Build a resume website and deploy it to the cloud using AWS.
+I also have a custom portfolio domain, cloudwithobinna.com, configured through Azure DNS. 
+I’ll cover how I set up and connected my custom portfolio domain in a separate blog post.
 
 I wanted the finished project to include:
 
@@ -83,7 +85,7 @@ Instead of simply having a resume that said I understood AWS, I wanted to be abl
 
 The website files were stored in Amazon S3, while CloudFront handled content delivery and HTTPS. I used Origin Access Control to allow CloudFront to access the S3 origin securely, without making the bucket's objects publicly accessible.
 
-I also connected a custom subdomain, resume.cloudwithobinna.com, using Azure DNS.
+### I also connected a custom subdomain, resume.cloudwithobinna.com, using Azure DNS.
 
 The architecture looked like this:
     
@@ -118,7 +120,7 @@ My first assumption was that the S3 bucket policy or OAC configuration was incor
 
 ### Eventually, I discovered the actual issue: I had not configured CloudFront's Default Root Object.
 
-When someone accessed the root URL, CloudFront did not know to serve index.html.
+When someone accessed the root URL, CloudFront did not know how to serve index.html.
 
 I set the Default Root Object to:
 \`\`\`
@@ -139,7 +141,7 @@ resume.cloudwithobinna.com
 
 This required connecting the subdomain to my CloudFront distribution and configuring HTTPS.
 
-I learned that I could keep DNS in Azure while hosting the website on AWS. The important part was configuring the DNS records correctly.
+I learned that I could still keep DNS in Azure while hosting the website on AWS. The important part was configuring the DNS records correctly.
 
 
 ## Challenge #3: Configuring HTTPS with AWS Certificate Manager
