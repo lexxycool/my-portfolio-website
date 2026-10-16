@@ -193,6 +193,45 @@ The most important lesson was that knowing what each service does is only part o
 ### The biggest takeaway: I didn't just learn how to deploy a website. I learned how to troubleshoot the architecture behind it.
 `,
     },
+    {
+      slug: "AWS Security Groups v Network ACLs: Understanding the Difference",
+      title: "AWS Security Groups vs Network ACLs",
+      excerpt: "Understanding the Key Differences.",
+      meta: "Oct 18 2026  ·  5 min read",
+      content: `# Introduction
+When working with Amazon Web Services (AWS), securing network traffic is an essential part of designing a reliable cloud infrastructure.
+
+Amazon Virtual Private Cloud (VPC) allows you to create an isolated network for your AWS resources, such as EC2 instances. However, creating a VPC alone does not provide all the network traffic controls you need.
+
+AWS provides two important network security mechanisms:
+
+ *  Security Groups
+
+ *  Network Access Control Lists (Network ACLs or NACLs)
+
+Both control traffic entering and leaving your AWS network resources, but they operate at different levels and follow different rules.
+
+Understanding the difference between them is important for anyone learning AWS networking, preparing for cloud certifications, or working toward a cloud engineering role.
+
+In this article, we will explore how Security Groups and Network ACLs work, compare their differences, and look at a practical example of how they can be used together.
+
+## 1. What Is an AWS Security Group?
+
+A Security Group is a virtual firewall that controls inbound and outbound traffic for associated resources, such as EC2 instances and network interfaces.
+
+Security Groups operate at the resource level, protecting the network interfaces associated with your workloads.
+
+You configure rules that specify which traffic is allowed based on criteria such as:
+
+ *  Protocol, such as TCP, UDP, or ICMP
+
+ *  Port number, such as 22 for SSH or 443 for HTTPS
+
+ *  Source of inbound traffic or destination of outbound traffic, using IP ranges or other supported security group references
+
+`
+    },
+  
   ],
   resume: {
     title: "Cloud Engineer Resume",
