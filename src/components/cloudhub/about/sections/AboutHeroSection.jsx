@@ -69,10 +69,10 @@ export default function AboutHeroSection() {
         <div style={aboutStyles.sectionAccent} />
         <h1 style={aboutStyles.heading}>About me</h1>
         <p style={aboutStyles.paragraph}>
-          I began my career as a Software Engineer, where I developed and maintained applications while collaborating closely with Site Reliability Engineers (SREs).
-          Working alongside the SRE team exposed me to cloud infrastructure, automation, system reliability, and production operations. 
-          Seeing how cloud technologies improved scalability, reliability, and deployment processes sparked my interest in cloud engineering.
-          <br></br><br></br>IAM a Cloud Engineer passionate about building secure, scalable and cost-effective cloud solutions.
+          I began my career as a Software Engineer, where I developed and maintained microservice applications while collaborating closely with Site Reliability Engineers (SREs).
+          Working alongside the SREs team exposed me to cloud infrastructure, automation, system reliability, and production operations. 
+          Seeing how cloud technologies improved high availability, scalability, reliability, and deployment processes sparked my interest in cloud engineering.
+          <br></br><br></br><strong>IAM</strong> a Cloud Engineer passionate about building secure, scalable and cost-effective cloud solutions.
         </p>
 
         <div style={aboutStyles.infoGrid}>
@@ -128,10 +128,6 @@ export default function AboutHeroSection() {
         </div>
 
         <div style={aboutStyles.uploadRow}>
-          <button type="button" style={aboutStyles.uploadButton} onClick={handlePickPhoto}>
-            Upload photo
-          </button>
-          <span style={aboutStyles.uploadHint}>JPG, PNG, WEBP supported</span>
           <input
             ref={fileInputRef}
             type="file"

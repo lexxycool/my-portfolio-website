@@ -6,7 +6,7 @@ import { IconPath, SkillTile } from "../ui/AboutPrimitives";
 export default function AboutSkillsSection() {
   return (
     <section style={aboutStyles.skillsSection}>
-      <h2 style={aboutStyles.skillsHeading}>Skills &amp; technologies</h2>
+      <h2 style={aboutStyles.skillsHeading}>Skills &amp; Technologies</h2>
       <div style={aboutStyles.skillsGrid}>
         {skills.map((skill) => (
           <SkillTile key={skill.label} icon={<IconPath path={skill.path} color={skill.color} />} label={skill.label} />
@@ -14,7 +14,7 @@ export default function AboutSkillsSection() {
       </div>
 
       <h3 style={aboutStyles.softSkillsHeading}>
-        <p>Soft skills</p></h3>
+        <p>Soft Skills</p></h3>
       <div style={aboutStyles.skillsGrid}>
         {softSkills.map((skill) => (
           <SkillTile key={skill.label} icon={<IconPath path={skill.path} color={skill.color} />} label={skill.label} />
