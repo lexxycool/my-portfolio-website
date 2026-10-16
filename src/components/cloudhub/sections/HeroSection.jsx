@@ -6,7 +6,7 @@ export default function HeroSection({ typed, full, onNavigate }) {
   return (
     <section className="home-hero" style={heroSectionStyles.section}>
       <div style={heroSectionStyles.contentWrap}>
-        <div style={heroSectionStyles.introText}>Hi, I'm Obinna</div>
+        <div style={heroSectionStyles.introText}>Hi, I'm Obinna Mokwe</div>
         <h1 style={heroSectionStyles.title}>
           {typed}
           <span style={heroCursorStyle(typed.length < full.length)}>|</span>

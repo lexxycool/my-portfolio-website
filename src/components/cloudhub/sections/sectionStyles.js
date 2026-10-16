@@ -15,7 +15,8 @@ export const heroSectionStyles = {
   introText: {
     fontFamily: "'Inter', sans-serif",
     fontSize: 22,
-    color: COLORS.textMuted,
+    fontWeight: 700,
+    color: "#B4BCCB",
     marginBottom: 6,
   },
   title: {
