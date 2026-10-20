@@ -211,9 +211,9 @@ AWS provides two important network security mechanisms:
 
 Both control traffic entering and leaving your AWS network resources, but they operate at different levels and follow different rules.
 
-Understanding the difference between them is important for anyone learning AWS networking, preparing for cloud certifications, or working toward a cloud engineering role.
+Understanding the difference between them is important for anyone learning AWS networking, preparing for cloud certifications, or working toward a cloud engineering role like me.
 
-In this article, we will explore how Security Groups and Network ACLs work, compare their differences, and look at a practical example of how they can be used together.
+In this article, we will explore how Security Groups and Network ACLs work, compare their differences, how they relate and when to use each one.
 
 ## 1. What Is an AWS Security Group?
 
@@ -265,8 +265,6 @@ SSH             TCP             22            Your trusted public IP
 
 This configuration allows public web traffic while restricting SSH access to your trusted IP address.
 
-For production systems, consider whether HTTP should redirect to HTTPS and use a controlled administrative access method rather than exposing SSH broadly.
-
 
 ## 2. What Is a Network ACL?
 
@@ -292,6 +290,11 @@ Rule number            Type              Source                   Action
 
    *                 All traffic    Any other unmatched traffic   Deny
 \`\`\`
+In this example, the deny rule is never reached for HTTPS traffic because rule 100 matches first. To block that IP address from HTTPS, place the specific deny rule before the broader allow rule.
+
+The final * rule is the implicit deny for traffic that does not match another rule.
+
+Network ACLs have separate inbound and outbound rule lists. The order and behavior must be considered independently for each direction.
 
 
 ### 3. Security Group vs. Network ACL
@@ -313,7 +316,7 @@ Return traffic         Automatically allowed for
 Primary purpose       Protect individual resources      Filter subnet traffic
 \`\`\`
 
-Remember: Security Groups protect resources, while Network ACLs filter traffic at the subnet boundary.
+### Remember: Security Groups protect resources, while Network ACLs filter traffic at the subnet boundary.
 
 ## 4. How They Work Together
 
