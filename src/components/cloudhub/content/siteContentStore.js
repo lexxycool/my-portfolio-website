@@ -42,7 +42,7 @@ export const defaultSiteContent = {
       category: "AWS & Azure",
       title: "Building My Cloud Resume: From HTML Resume to a Multi-Cloud AWS Deployment",
       excerpt: "How I built a cloud resume with AWS S3, CloudFront, and Azure DNS—and what I learned while troubleshooting it.",
-      meta: "Oct 14 2026  ·  8 min read",
+      meta: "Oct 14 2026  ·  4 mins read",
       content: `# Introduction
 
 The Cloud Resume Challenge is often described as a way to demonstrate cloud skills by building and deploying a resume website using cloud technologies.
@@ -197,7 +197,7 @@ The most important lesson was that knowing what each service does is only part o
       slug: "AWS Security Groups v Network ACLs: Understanding the Difference",
       title: "AWS Security Groups vs Network ACLs",
       excerpt: "Understanding the Key Differences.",
-      meta: "Oct 18 2026  ·  5 min read",
+      meta: "Oct 18 2026  ·  8 mins read",
       content: `# Introduction
 When working with Amazon Web Services (AWS), securing network traffic is an essential part of designing a reliable cloud infrastructure.
 
@@ -223,11 +223,95 @@ Security Groups operate at the resource level, protecting the network interfaces
 
 You configure rules that specify which traffic is allowed based on criteria such as:
 
- *  Protocol, such as TCP, UDP, or ICMP
+ *  Protocol, such as TCP, UDP, or ICMP.
 
- *  Port number, such as 22 for SSH or 443 for HTTPS
+ *  Port number, such as 22 for SSH or 443 for HTTPS.
 
- *  Source of inbound traffic or destination of outbound traffic, using IP ranges or other supported security group references
+ *  Source of inbound traffic or destination of outbound traffic, using IP ranges or other supported security group references.
+
+## Key characteristics of Security Groups
+
+### 1. Stateful
+
+Security Groups are stateful. If a connection is allowed in one direction, the response traffic for that connection is automatically allowed, even if a separate outbound or inbound rule would otherwise block that response.
+
+For example, if an EC2 instance accepts an HTTPS connection from a client, the response traffic is automatically permitted by the stateful connection tracking.
+
+### 2. Allow rules only
+
+Security Groups support allow rules, not explicit deny rules. Traffic that does not match an applicable allow rule is not permitted.
+
+### 3. Applied to network interfaces
+
+Security Groups are associated with network interfaces rather than directly with an entire subnet. Multiple resources can use the same Security Group, and a network interface can have multiple Security Groups.
+
+### Example: Securing an EC2 web server
+
+Imagine you have an EC2 instance hosting a website.
+
+You could configure its Security Group to allow:
+
+\`\`\`
+
+Type          Protocol          Port          Source
+
+HTTP            TCP             80            0.0.0.0/0
+
+HTTPS           TCP             443           0.0.0.0/0
+
+SSH             TCP             22            Your trusted public IP
+
+\`\`\`
+
+This configuration allows public web traffic while restricting SSH access to your trusted IP address.
+
+For production systems, consider whether HTTP should redirect to HTTPS and use a controlled administrative access method rather than exposing SSH broadly.
+
+
+## 2. What Is a Network ACL?
+
+A Network Access Control List (NACL) filters traffic entering and leaving a VPC subnet.
+
+Key characteristics:
+
+ * Stateless: Inbound and outbound traffic are evaluated independently.
+
+ * Allow and deny rules: You can explicitly block specific IP addresses or traffic.
+
+ * Rule numbering: Rules are evaluated in ascending numerical order, and the first matching rule takes effect.
+
+Network ACLs are useful when you need subnet-level traffic controls or want to block a particular IP address.
+
+For example:
+
+\`\`\`
+Rule number            Type              Source                   Action
+  100                  HTTPS             0.0.0.0/0                Allow
+
+  110                All traffic       203.0.113.25/32            Deny
+
+   *                 All traffic    Any other unmatched traffic   Deny
+\`\`\`
+
+
+### 3. Security Group vs. Network ACL
+
+\`\`\`
+Feature                    Security Group               Network ACL
+
+Scope                     Network interface              Subnet
+
+Traffic filtering            Stateful                   Stateless
+
+Rules                       Allow only                 Allow and deny
+
+Rule evaluation         Applicable allow rules        First matching rule by number
+
+Return traffic         Automatically allowed for
+                       tracked connections            Must be explicitly permitted
+
+Primary purpose       Protect individual resources     Filter subnet traffic
+\`\`\`
 
 `
     },
