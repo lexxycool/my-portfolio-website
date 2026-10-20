@@ -197,7 +197,7 @@ The most important lesson was that knowing what each service does is only part o
       slug: "AWS Security Groups v Network ACLs: Understanding the Difference",
       title: "AWS Security Groups vs Network ACLs",
       excerpt: "Understanding the Key Differences.",
-      meta: "Oct 18 2026  ·  8 mins read",
+      meta: "Oct 20 2026  ·  8 mins read",
       content: `# Introduction
 When working with Amazon Web Services (AWS), securing network traffic is an essential part of designing a reliable cloud infrastructure.
 
@@ -297,21 +297,85 @@ Rule number            Type              Source                   Action
 ### 3. Security Group vs. Network ACL
 
 \`\`\`
-Feature                    Security Group               Network ACL
+Feature                    Security Group                 Network ACL
 
-Scope                     Network interface              Subnet
+Scope                     Network interface                Subnet
 
-Traffic filtering            Stateful                   Stateless
+Traffic filtering            Stateful                     Stateless
 
-Rules                       Allow only                 Allow and deny
+Rules                       Allow only                   Allow and deny
 
-Rule evaluation         Applicable allow rules        First matching rule by number
+Rule evaluation         Applicable allow rules          First matching rule by number
 
 Return traffic         Automatically allowed for
-                       tracked connections            Must be explicitly permitted
+                       tracked connections              Must be explicitly permitted
 
-Primary purpose       Protect individual resources     Filter subnet traffic
+Primary purpose       Protect individual resources      Filter subnet traffic
 \`\`\`
+
+Remember: Security Groups protect resources, while Network ACLs filter traffic at the subnet boundary.
+
+## 4. How They Work Together
+
+Security Groups and Network ACLs complement each other.
+
+Consider an EC2 web server in a public subnet:
+
+ * A user sends an HTTPS request.
+
+ * The inbound Network ACL must permit the traffic.
+
+ * The Security Group must allow HTTPS on port 443.
+
+ * The server processes the request.
+
+ * The outbound Network ACL must allow the response traffic.
+
+ * The Security Group automatically permits the response for the established connection.
+
+Because Network ACLs are stateless, their outbound rules must allow the appropriate return traffic, including client ephemeral ports when required.
+
+If either security control blocks the traffic, the connection may fail.
+
+## 5. When Should You Use Each?
+
+Use Security Groups to:
+
+ * Control access to EC2 instances and other supported network interfaces.
+
+ * Allow specific application ports and trusted sources.
+
+ * Manage connections using stateful filtering.
+
+Use Network ACLs to:
+
+ * Filter traffic at the subnet level.
+
+ * Explicitly deny specific IP addresses or ranges.
+
+ * Add another layer of network security.
+
+For most workloads, Security Groups are the primary resource-level control, while Network ACLs provide additional subnet-level filtering when needed.
+
+## 6. Common Mistakes
+
+ * Assuming Security Groups support explicit deny rules.
+
+ * Forgetting to allow return traffic in Network ACLs.
+
+ * Placing broad allow rules before specific deny rules.
+
+ * Opening unnecessary ports to the internet.
+
+* Troubleshooting Security Groups without checking Network ACLs and route tables.
+
+## Conclusion
+
+AWS Security Groups and Network ACLs serve different but complementary purposes. Security Groups provide stateful traffic control at the resource level, while Network ACLs provide stateless filtering at the subnet level.
+
+Understanding how they work together will help you design secure AWS environments and troubleshoot network connectivity.
+
+To reinforce these concepts, create a VPC with a public subnet and an EC2 instance, configure both controls, and test how changing their rules affects connectivity.
 
 `
     },
