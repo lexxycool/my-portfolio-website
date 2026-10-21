@@ -84,7 +84,7 @@ export default function AboutHeroSection() {
               </svg>
             )}
             label="Experience"
-            value="3+ Years"
+            value="4+ Years"
           />
           <InfoRow
             icon={(
