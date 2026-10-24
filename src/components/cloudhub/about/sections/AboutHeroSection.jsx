@@ -140,7 +140,7 @@ export default function AboutHeroSection() {
       </div>
 
       <div className="about-avatar" style={aboutStyles.avatarWrap}>
-        <AvatarPlaceholder imageSrc={avatarPreview || "/avatar.jpg"} onClick={handlePickPhoto} />
+        <AvatarPlaceholder imageSrc={avatarPreview || "/avatar.png"} onClick={handlePickPhoto} />
       </div>
 
       <div style={aboutStyles.certifications}>

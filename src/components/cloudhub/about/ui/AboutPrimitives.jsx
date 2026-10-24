@@ -10,7 +10,7 @@ export function IconPath({ path, color, size = 18 }) {
   );
 }
 
-export function AvatarPlaceholder({ imageSrc = "/avatar.jpg", alt = "Profile photo", onClick }) {
+export function AvatarPlaceholder({ imageSrc = "/avatar.png", alt = "Profile photo", onClick }) {
   const [hasImageError, setHasImageError] = React.useState(false);
 
   React.useEffect(() => {
