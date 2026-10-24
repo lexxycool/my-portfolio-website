@@ -22,20 +22,6 @@ export const defaultSiteContent = {
       tags: ["Python", "Azure OpenAI", "Functions"],
     },
   ],
-  labs: [
-    {
-      title: "Azure automation experiments",
-      desc: "Small prototypes for scripting repeatable Azure tasks and deployments.",
-    },
-    {
-      title: "Security tooling playground",
-      desc: "Hands-on testing for network inspection, access control, and monitoring ideas.",
-    },
-    {
-      title: "AI workflow prototypes",
-      desc: "Quick builds for assistant-style automations and productivity workflows.",
-    },
-  ],
   blogPosts: [
     {
       slug: "building-my-cloud-resume",
@@ -405,13 +391,6 @@ function normalizeProject(item) {
   };
 }
 
-function normalizeLab(item) {
-  return {
-    title: item?.title || "Untitled lab",
-    desc: item?.desc || "",
-  };
-}
-
 function slugify(text) {
   return (text || "").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
 }
@@ -444,7 +423,6 @@ export function normalizeSiteContent(content) {
   const source = content || {};
   return {
     projects: Array.isArray(source.projects) ? source.projects.map(normalizeProject) : clone(defaultSiteContent.projects),
-    labs: Array.isArray(source.labs) ? source.labs.map(normalizeLab) : clone(defaultSiteContent.labs),
     blogPosts: Array.isArray(source.blogPosts) ? uniqueSlugs(source.blogPosts.map(normalizePost)) : clone(defaultSiteContent.blogPosts),
     resume: {
       title: source.resume?.title || defaultSiteContent.resume.title,

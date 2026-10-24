@@ -135,7 +135,7 @@ export default function CloudHubAdmin({ onNavigate, siteContent, onSaveContent }
           Administrator
         </h1>
         <p style={{ margin: "0 0 20px", fontFamily: "'Inter', sans-serif", color: COLORS.textMuted }}>
-          Update your projects, labs, and blog posts from one place.
+          Update your projects and blog posts from one place.
         </p>
 
         <div style={{ display: "flex", gap: 10, marginBottom: 22 }}>
@@ -186,25 +186,6 @@ export default function CloudHubAdmin({ onNavigate, siteContent, onSaveContent }
                 <input value={(project.tags || []).join(", ")} onChange={(event) => handleProjectTagsChange(index, event.target.value)} style={fieldStyles.input} />
               </div>
               <RowActions onDelete={() => removeListItem("projects", index)} />
-            </div>
-          ))}
-        </SectionCard>
-
-        <SectionCard
-          title="Labs"
-          onAdd={() => addListItem("labs", { title: "", desc: "" })}
-        >
-          {draft.labs.map((lab, index) => (
-            <div key={`lab-${index}`} style={{ borderTop: index ? `1px solid ${COLORS.border}` : "none", paddingTop: index ? 14 : 0, marginTop: index ? 14 : 0 }}>
-              <div className="admin-field-row" style={{ display: "grid", gridTemplateColumns: "160px 1fr", gap: 12, marginBottom: 10 }}>
-                <label style={{ fontFamily: "'Inter', sans-serif", color: COLORS.textMuted, fontSize: 13 }}>Title</label>
-                <input value={lab.title} onChange={(event) => updateListItem("labs", index, "title", event.target.value)} style={fieldStyles.input} />
-              </div>
-              <div className="admin-field-row" style={{ display: "grid", gridTemplateColumns: "160px 1fr", gap: 12 }}>
-                <label style={{ fontFamily: "'Inter', sans-serif", color: COLORS.textMuted, fontSize: 13 }}>Description</label>
-                <textarea value={lab.desc} onChange={(event) => updateListItem("labs", index, "desc", event.target.value)} style={fieldStyles.textarea} />
-              </div>
-              <RowActions onDelete={() => removeListItem("labs", index)} />
             </div>
           ))}
         </SectionCard>
